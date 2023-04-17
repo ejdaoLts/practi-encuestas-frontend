@@ -19,6 +19,11 @@
     "target": "es2022",
     "module": "es2020",
     "lib": ["es2018", "dom"],
+    "paths": {
+      "@auth/*": ["src/app/modules/auth/*"],
+      "@home/*": ["src/app/modules/home/*"],
+      "@shared/*": ["src/app/shared/*"]
+    },
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

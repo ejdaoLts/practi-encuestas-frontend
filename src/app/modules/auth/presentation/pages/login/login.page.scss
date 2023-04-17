@@ -1,0 +1,10 @@
+.background-image {
+  --background: #abbaab;
+  --background: -webkit-linear-gradient(to right, #ffffff, #abbaab);
+  --background: linear-gradient(to right, #ffffff, #abbaab);
+}
+
+form {
+  padding: 10px;
+  text-align: center;
+}

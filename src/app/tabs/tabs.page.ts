@@ -1,15 +1,44 @@
-import { Component, EnvironmentInjector, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EnvironmentInjector, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
+import { STORAGE_KEYS } from '@shared/constants';
 
 @Component({
+  standalone: true,
+  imports: [IonicModule],
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
-  standalone: true,
-  imports: [IonicModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsPage {
+  constructor(private _router: Router) {}
+
+  public tabName = localStorage.getItem(STORAGE_KEYS.tabsTitle) || 'Home';
+
   public environmentInjector = inject(EnvironmentInjector);
 
-  constructor() {}
+  public alertButtons = [
+    {
+      text: 'Cancelar',
+      role: 'cancel',
+      handler: () => {
+        //this.handlerMessage = 'Alert canceled';
+      },
+    },
+    {
+      text: 'OK',
+      role: 'confirm',
+      handler: () => {
+        localStorage.clear();
+        this._router.navigate(['access-control/login']);
+        this.tabName = 'Home';
+      },
+    },
+  ];
+
+  public setTabsName(name: string): void {
+    localStorage.setItem(STORAGE_KEYS.tabsTitle, name);
+    this.tabName = name;
+  }
 }

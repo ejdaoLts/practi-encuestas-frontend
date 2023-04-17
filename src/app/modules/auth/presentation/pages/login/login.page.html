@@ -1,0 +1,25 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Control de acceso</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="background-image">
+  <ion-header collapse="condense">
+    <ion-toolbar class="background-image">
+      <ion-title size="large">Control de acceso</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <form [formGroup]="loginForm" (ngSubmit)="clickOnAuthenticate()">
+    <ion-input [formControl]="loginForm.username" label="Nombre del Usuario" />
+
+    <ion-input type="password" [formControl]="loginForm.password" label="Contraseña" />
+
+    <br />
+
+    <ion-button type="submit" class="bolder" [disabled]="isAuthenticating">
+      INICIAR SESIÓN
+    </ion-button>
+  </form>
+</ion-content>
