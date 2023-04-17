@@ -7,5 +7,6 @@ export const END_POINTS = {
     AUTH: {
       LOGIN: `${apiUrl}/api/v1/login`,
     },
+    EVALUACIONES: `${apiUrl}/api/v1/evaluaciones`,
   },
 };

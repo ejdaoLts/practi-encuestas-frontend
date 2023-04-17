@@ -35,7 +35,7 @@
           },
           "configurations": {
             "production": {
-              "allowedCommonJsDependencies": ["file-saver"],
+              "allowedCommonJsDependencies": ["file-saver", "dayjs"],
               "budgets": [
                 {
                   "type": "initial",

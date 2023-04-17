@@ -1,9 +1,20 @@
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="tab-container">
+  <section class="tab-content">
+    <div *ngFor="let el of dataSource.data">
+      <ion-card class="tab-card">
+        <ion-card-header>
+          <ion-card-title>
+            {{el.entidad.nombre}}
+            <span class="card-sub-in-title"> ({{el.created_at | formatDate : 4}}) </span>
+          </ion-card-title>
+          <ion-card-subtitle>
+            {{ el.last_update ? 'ACTUALIZADA EL ' + (el.last_update | formatDate : 4) : 'NO HA ' +
+            'EMPEZADO ESTA EVALUACIÓN' }}
+          </ion-card-subtitle>
+        </ion-card-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+        <ion-card-content> {{el.tipo_evaluacion.nombre}} </ion-card-content>
+      </ion-card>
+    </div>
+  </section>
 </ion-content>

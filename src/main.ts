@@ -1,9 +1,9 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import {
-  PreloadingStrategy,
+  //PreloadingStrategy,
   RouteReuseStrategy,
-  RouterModule,
+  //RouterModule,
   provideRouter,
 } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -25,7 +25,7 @@ bootstrapApplication(AppComponent, {
 
     importProvidersFrom(
       IonicModule.forRoot({ mode: 'ios' }),
-      RouterModule.forRoot([], { preloadingStrategy: PreloadingStrategy }),
+      /*RouterModule.forRoot([], { preloadingStrategy: PreloadingStrategy }),*/
       HttpClientModule
     ),
     provideRouter(routes),
