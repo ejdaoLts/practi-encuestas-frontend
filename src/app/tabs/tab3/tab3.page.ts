@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IonicModule, LoadingController } from '@ionic/angular';
-import { GetEvaluacionesPendientesHandler } from './handlers';
 import { MatTableDataSource } from '@angular/material/table';
-import { EvaluacionPendienteDto } from './dtos';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from '@shared/pipes';
+import { EvaluacionPendienteDto, PuntoEvaluacionT1 } from '@http/dtos';
+import {
+  GetDataForGenerateEvaluacionService,
+  GetEvaluacionesPendientesService,
+} from '@http/services';
+import { TiposEvaluacion } from '@http/constants';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, IonicModule, PipesModule],
-  providers: [GetEvaluacionesPendientesHandler],
+  imports: [CommonModule, IonicModule, FormsModule, PipesModule],
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
@@ -17,11 +21,19 @@ import { PipesModule } from '@shared/pipes';
 })
 export class Tab3Page implements OnInit {
   public dataSource = new MatTableDataSource<EvaluacionPendienteDto>([]);
+  public evaluacionSelected?: EvaluacionPendienteDto;
+  public isModalOpen = false;
+  public tiposEvaluacion = TiposEvaluacion;
 
   private _loading!: HTMLIonLoadingElement;
 
+  private _dataForTipoEvaluacion: any;
+
+  private _preguntaActualT1 = 0;
+
   constructor(
-    private _getEvaluacionesPendientes: GetEvaluacionesPendientesHandler,
+    private _getDataForGenerateEvaluacion: GetDataForGenerateEvaluacionService,
+    private _getEvaluacionesPendientes: GetEvaluacionesPendientesService,
     private loadingCtrl: LoadingController,
     private _cd: ChangeDetectorRef
   ) {}
@@ -33,10 +45,46 @@ export class Tab3Page implements OnInit {
 
     result.fold({
       right: _ => {
+        console.log(_);
         this._instanceDataSource(_);
-        this._loading.remove();
+        this._removeLoading();
       },
     });
+  }
+
+  public async clickOnToggleModal(
+    open: boolean,
+    evaluacion?: EvaluacionPendienteDto
+  ): Promise<void> {
+    if (evaluacion) {
+      await this._showLoading('Obteniendo información para generar evaluación...');
+      this.evaluacionSelected = evaluacion;
+      const result = await this._getDataForGenerateEvaluacion.execute(evaluacion.tipo_id);
+
+      result.fold({
+        right: _ => {
+          this._dataForTipoEvaluacion = _;
+          this._removeLoading();
+        },
+      });
+    }
+
+    if (open) {
+      this.isModalOpen = true;
+    } else {
+      this._dataForTipoEvaluacion = undefined;
+      this.isModalOpen = false;
+    }
+
+    this._cd.markForCheck();
+  }
+
+  public clickOnNuevaPregunta(): void {
+    this._preguntaActualT1++;
+  }
+
+  public clickOnAnteriorPregunta(): void {
+    this._preguntaActualT1--;
   }
 
   private _instanceDataSource(data: EvaluacionPendienteDto[]): void {
@@ -44,11 +92,27 @@ export class Tab3Page implements OnInit {
     this._cd.markForCheck();
   }
 
-  private async _showLoading(): Promise<void> {
+  private async _showLoading(message = 'Obteniendo evaluaciones pendientes...'): Promise<void> {
     this._loading = await this.loadingCtrl.create({
-      message: 'Obteniendo evaluaciones pendientes...',
+      message,
     });
 
     this._loading.present();
+  }
+
+  private _removeLoading(): void {
+    this._loading.remove();
+  }
+
+  get pt1(): PuntoEvaluacionT1 {
+    return this._dataForTipoEvaluacion[this._preguntaActualT1];
+  }
+
+  get evaT1(): PuntoEvaluacionT1[] {
+    return this._dataForTipoEvaluacion;
+  }
+
+  get paT1(): number {
+    return this._preguntaActualT1;
   }
 }

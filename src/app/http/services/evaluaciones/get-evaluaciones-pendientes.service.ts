@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Either } from '@eklipse/utilities';
 import { firstValueFrom, map } from 'rxjs';
-import { EvaluacionPendienteDto } from '../dtos';
+import { EvaluacionPendienteDto } from '@http/dtos';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
+import { _MatTableDataSource } from '@angular/material/table';
 
 type Result = Either<boolean, EvaluacionPendienteDto[]>;
 
-@Injectable()
-export class GetEvaluacionesPendientesHandler extends BaseHttp {
+@Injectable({ providedIn: 'root' })
+export class GetEvaluacionesPendientesService extends BaseHttp {
   public async execute(onlyMe = true, onlyPendientes = true): Promise<Result> {
     try {
       const result = await this._get(onlyMe, onlyPendientes);
