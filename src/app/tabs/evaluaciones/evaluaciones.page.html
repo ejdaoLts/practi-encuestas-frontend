@@ -1,6 +1,22 @@
 <ion-content [fullscreen]="true" class="tab-container ion-padding">
   <section class="tab-content">
-    <div *ngFor="let el of dataSource.data">
+    <ion-toolbar>
+      <ion-label><b>{{dataSource.data.length}} EVALUACIONES PENDIENTES</b></ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="refresh()"><ion-icon name="refresh-outline"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+
+    <ion-item>
+      <ion-input [formControl]="filter" labelPlacement="floating" label="Buscar"></ion-input>
+      <ion-buttons slot="end" *ngIf="filter.value">
+        <ion-button (click)="filter.setValue('')" color="dark">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+
+    <div *ngFor="let el of dataSource.filteredData">
       <ion-card class="tab-card" (click)="clickOnToggleModal(true, el)">
         <ion-card-header>
           <ion-card-title>
@@ -22,7 +38,7 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Modal</ion-title>
+          <ion-title>{{paT1 + 1}} de {{evaT1.length}}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
           </ion-buttons>
@@ -39,7 +55,7 @@
       <!--------------------------------------EVA 1 ------------------------------------------->
       <!--------------------------------------------------------------------------------------->
       <!--------------------------------------------------------------------------------------->
-      <ion-content class="ion-padding">
+      <ion-content class="ion-padding" style="max-height: 150px">
         <div *ngIf="evaluacionSelected?.tipo_evaluacion?.tipo === tiposEvaluacion.T1">
           <div class="eva1-grupo">
             <b>CONDICIÓN DE CALIDAD:</b><br />{{pt1.grupo.orden}} - {{pt1.grupo.descripcion}}
@@ -51,18 +67,7 @@
         </div>
       </ion-content>
 
-      <ion-content style="max-height: 250px" class="ion-padding">
-        <ion-item>
-          <ion-textarea
-            labelPlacement="floating"
-            fill="outline"
-            placeholder="Observaciones (opcional)"
-            [(ngModel)]="pt1.observaciones"
-          ></ion-textarea>
-        </ion-item>
-
-        <br />
-
+      <ion-content class="ion-padding">
         <ion-checkbox
           labelPlacement="end"
           [checked]="pt1.inspeccionVisual"
@@ -98,21 +103,42 @@
           <ion-radio [value]="3">No cumple</ion-radio><br />
           <ion-radio [value]="4">No aplica</ion-radio><br />
         </ion-radio-group>
+
+        <br />
+
+        <ion-item>
+          <ion-textarea
+            labelPlacement="floating"
+            fill="outline"
+            placeholder="Observaciones (opcional)"
+            [(ngModel)]="pt1.observaciones"
+          ></ion-textarea>
+        </ion-item>
       </ion-content>
 
       <ion-footer>
         <ion-toolbar>
-          <ion-button *ngIf="paT1 !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
+          <ion-button *ngIf="paT1 !== 0" (click)="clickOnAnteriorPreguntaT1()" slot="start">
             Anterior
           </ion-button>
 
           <ion-button
             *ngIf="paT1 < evaT1.length - 1"
-            (click)="clickOnNuevaPregunta()"
+            (click)="clickOnNuevaPreguntaT1()"
             slot="end"
             [disabled]="!pt1.valoracionCondicion"
           >
             Siguiente
+          </ion-button>
+
+          <ion-button
+            *ngIf="paT1 === evaT1.length - 1"
+            (click)="clickOnFinalizarT1()"
+            slot="end"
+            color="success"
+            [disabled]="!pt1.valoracionCondicion"
+          >
+            Finalizar
           </ion-button>
         </ion-toolbar>
       </ion-footer>

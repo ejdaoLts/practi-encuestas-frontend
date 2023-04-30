@@ -14,5 +14,5 @@ export interface PuntoEvaluacionT1 {
   revisionDocumental: boolean;
   entrevistaActores: boolean;
   valoracionCondicion: ValoracionesEvaluacion | null;
-  observaciones: string;
+  observaciones: string | null;
 }

@@ -48,6 +48,14 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     const grupos = orderBy(_, 'orden', 'asc');
 
     grupos.forEach(grupo => {
+      const ramdon = false;
+
+      const inVis = ramdon ? this.getRandomBoolean() : false;
+      const revDoc = ramdon ? this.getRandomBoolean() : false;
+      const entAct = ramdon ? this.getRandomBoolean() : false;
+      const valCon = ramdon ? this.getRandom() : null;
+      const obs = ramdon ? `${inVis} ${revDoc} ${entAct} ${valCon}` : null;
+
       grupo.aspectos_evaluacion.forEach(aspecto => {
         puntos.push({
           id: aspecto.id,
@@ -59,11 +67,11 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
             orden: grupo.orden,
             descripcion: grupo.descripcion,
           },
-          inspeccionVisual: false,
-          revisionDocumental: false,
-          entrevistaActores: false,
-          valoracionCondicion: null,
-          observaciones: '',
+          inspeccionVisual: inVis,
+          revisionDocumental: revDoc,
+          entrevistaActores: entAct,
+          valoracionCondicion: valCon,
+          observaciones: obs,
         });
 
         i++;
@@ -71,5 +79,16 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     });
 
     return orderBy(puntos, 'orden', 'asc');
+  }
+
+  private getRandom(min = 1, max = 4) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
+  private getRandomBoolean(min = 0, max = 1) {
+    const _ = Math.random() * (max - min) + min;
+
+    if (!Math.round(_)) return false;
+    else return true;
   }
 }
