@@ -7,12 +7,14 @@ import { EvaluacionDataT1Response } from '@http/responses';
 import { TiposEvaluacion } from '@http/constants';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
+import { PuntoEvaluacionT2 } from '@http/dtos/evaluaciones';
 
 type Result1 = Either<boolean, PuntoEvaluacionT1[]>;
 
 @Injectable({ providedIn: 'root' })
 export class GetDataForGenerateEvaluacionService extends BaseHttp {
   private _dataForEvaluacionTipo1!: PuntoEvaluacionT1[];
+  private _dataForEvaluacionTipo2!: PuntoEvaluacionT2[];
 
   public async execute(tipo: TiposEvaluacion): Promise<Result1> {
     try {
@@ -27,6 +29,15 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
         }
       }
 
+      if (tipo === TiposEvaluacion.T2) {
+        if (!this._dataForEvaluacionTipo2) {
+          result = await this._getEvaTipo2();
+          this._dataForEvaluacionTipo2 = result;
+        } else {
+          result = this._dataForEvaluacionTipo2;
+        }
+      }
+
       return Either.right(cloneDeep(result));
     } catch (error) {
       return Either.left(false);
@@ -38,6 +49,14 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
       this._http
         .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/1`)
         .pipe(map(_ => this._mapEvaTipo1(_)))
+    );
+  }
+
+  private _getEvaTipo2(): Promise<PuntoEvaluacionT2[]> {
+    return firstValueFrom(
+      this._http
+        .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/2`)
+        .pipe(map(_ => this._mapEvaTipo2(_)))
     );
   }
 
@@ -72,6 +91,33 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
           entrevistaActores: entAct,
           valoracionCondicion: valCon,
           observaciones: obs,
+        });
+
+        i++;
+      });
+    });
+
+    return orderBy(puntos, 'orden', 'asc');
+  }
+
+  private _mapEvaTipo2(_: EvaluacionDataT1Response[]): PuntoEvaluacionT2[] {
+    const puntos: PuntoEvaluacionT2[] = [];
+    let i = 1;
+
+    const grupos = orderBy(_, 'orden', 'asc');
+
+    grupos.forEach(grupo => {
+      grupo.aspectos_evaluacion.forEach(aspecto => {
+        puntos.push({
+          id: aspecto.id,
+          orden: i,
+          nombre: aspecto.nombre,
+          grupo: {
+            id: grupo.id,
+            orden: grupo.orden,
+            descripcion: grupo.descripcion,
+          },
+          gradoAcuerdo: 5,
         });
 
         i++;

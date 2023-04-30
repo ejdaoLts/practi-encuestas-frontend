@@ -38,7 +38,7 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{paT1 + 1}} de {{evaT1.length}}</ion-title>
+          <ion-title>{{preguntaActual + 1}} de {{evaT1.length}}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
           </ion-buttons>
@@ -55,19 +55,27 @@
       <!--------------------------------------EVA 1 ------------------------------------------->
       <!--------------------------------------------------------------------------------------->
       <!--------------------------------------------------------------------------------------->
-      <ion-content class="ion-padding" style="max-height: 150px">
-        <div *ngIf="evaluacionSelected?.tipo_evaluacion?.tipo === tiposEvaluacion.T1">
+      <ion-content
+        class="ion-padding"
+        [style]="'max-height: ' +(tipoEvaluacionActual === 1 ? 150 : 250) +'px'"
+      >
+        <div *ngIf="[tiposEvaluacion.T1, tiposEvaluacion.T2].indexOf(tipoEvaluacionActual) >= 0">
           <div class="eva1-grupo">
             <b>CONDICIÓN DE CALIDAD:</b><br />{{pt1.grupo.orden}} - {{pt1.grupo.descripcion}}
           </div>
           <div class="eva1-nombre">
             <b>ASPECTOS A EVALUAR DE LA CONDICIÓN: </b><br />{{pt1.nombre}}
           </div>
-          <div class="eva1-documental"><b>DOCUMENTAL:</b><br />{{pt1.documental}}</div>
+          <div class="eva1-documental" *ngIf="pt1.documental">
+            <b>DOCUMENTAL:</b><br />{{pt1.documental}}
+          </div>
         </div>
       </ion-content>
 
-      <ion-content class="ion-padding">
+      <ion-content
+        class="ion-padding"
+        *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0"
+      >
         <ion-checkbox
           labelPlacement="end"
           [checked]="pt1.inspeccionVisual"
@@ -116,15 +124,15 @@
         </ion-item>
       </ion-content>
 
-      <ion-footer>
+      <ion-footer *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0">
         <ion-toolbar>
-          <ion-button *ngIf="paT1 !== 0" (click)="clickOnAnteriorPreguntaT1()" slot="start">
+          <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
             Anterior
           </ion-button>
 
           <ion-button
-            *ngIf="paT1 < evaT1.length - 1"
-            (click)="clickOnNuevaPreguntaT1()"
+            *ngIf="preguntaActual < evaT1.length - 1"
+            (click)="clickOnNuevaPregunta()"
             slot="end"
             [disabled]="!pt1.valoracionCondicion"
           >
@@ -132,7 +140,7 @@
           </ion-button>
 
           <ion-button
-            *ngIf="paT1 === evaT1.length - 1"
+            *ngIf="preguntaActual === evaT1.length - 1"
             (click)="clickOnFinalizarT1()"
             slot="end"
             color="success"
@@ -142,11 +150,56 @@
           </ion-button>
         </ion-toolbar>
       </ion-footer>
+
       <!--------------------------------------------------------------------------------------->
       <!--------------------------------------------------------------------------------------->
       <!--------------------------------------EVA 2 ------------------------------------------->
       <!--------------------------------------------------------------------------------------->
       <!--------------------------------------------------------------------------------------->
+      <ion-content
+        class="ion-padding"
+        *ngIf="[tiposEvaluacion.T2 ].indexOf(tipoEvaluacionActual) >= 0"
+      >
+        <ion-radio-group
+          [allowEmptySelection]="true"
+          value="valoracion"
+          [(ngModel)]="pt2.gradoAcuerdo"
+        >
+          <ion-radio [value]="5">Totalmente de acuerdo</ion-radio><br />
+          <ion-radio [value]="4">De acuerdo</ion-radio><br />
+          <ion-radio [value]="3">Ni de Acuerdo Ni en Desacuerdo</ion-radio><br />
+          <ion-radio [value]="2">En desacuerdo</ion-radio><br />
+          <ion-radio [value]="1">Totalmente en desacuerdo</ion-radio><br />
+          <ion-radio [value]="null">No aplica</ion-radio><br />
+        </ion-radio-group>
+      </ion-content>
+
+      <ion-footer *ngIf="[tiposEvaluacion.T2 ].indexOf(tipoEvaluacionActual) >= 0">
+        <ion-toolbar>
+          <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
+            Anterior
+          </ion-button>
+
+          <ion-button
+            *ngIf="preguntaActual < evaT2.length - 1"
+            (click)="clickOnNuevaPregunta()"
+            slot="end"
+            [disabled]="pt2.gradoAcuerdo === undefined"
+          >
+            Siguiente
+          </ion-button>
+
+          <ion-button
+            *ngIf="preguntaActual === evaT1.length - 1"
+            (click)="''"
+            slot="end"
+            color="success"
+            [disabled]="!pt2.gradoAcuerdo"
+          >
+            Finalizar
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
     </ng-template>
   </ion-modal>
 </ion-content>

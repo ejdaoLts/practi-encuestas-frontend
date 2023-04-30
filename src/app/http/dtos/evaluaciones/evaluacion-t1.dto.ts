@@ -1,4 +1,4 @@
-import { ValoracionesEvaluacion } from '@http/constants';
+import { ValoracionesEvaluacionT1 } from '@http/constants';
 
 export interface PuntoEvaluacionT1 {
   id: number;
@@ -13,6 +13,6 @@ export interface PuntoEvaluacionT1 {
   inspeccionVisual: boolean;
   revisionDocumental: boolean;
   entrevistaActores: boolean;
-  valoracionCondicion: ValoracionesEvaluacion | null;
+  valoracionCondicion: ValoracionesEvaluacionT1 | null;
   observaciones: string | null;
 }

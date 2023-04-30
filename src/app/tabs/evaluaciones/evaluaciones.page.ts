@@ -9,7 +9,7 @@ import { AlertController, IonicModule, LoadingController } from '@ionic/angular'
 import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from '@shared/pipes';
-import { EvaluacionPendienteDto, PuntoEvaluacionT1 } from '@http/dtos';
+import { EvaluacionPendienteDto, PuntoEvaluacionT1, PuntoEvaluacionT2 } from '@http/dtos';
 import {
   CalificarEvaluacionService,
   GetDataForGenerateEvaluacionService,
@@ -37,7 +37,8 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
 
   private _dataForTipoEvaluacion: any;
 
-  private _preguntaActualT1 = /* 30 */ 0;
+  private _preguntaActual = 0;
+  private _tipoEvaluacionActual = TiposEvaluacion.T1;
 
   public filter = new FormControl('');
 
@@ -71,6 +72,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     if (evaluacion) {
       await this._showLoading('Obteniendo información para generar evaluación...');
       this.evaluacionSelected = evaluacion;
+      this._tipoEvaluacionActual = evaluacion.tipo_evaluacion.id;
       const result = await this._getDataForGenerateEvaluacion.execute(evaluacion.tipo_id);
 
       result.fold({
@@ -85,7 +87,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       this.isModalOpen = true;
     } else {
       this.isModalOpen = false;
-      this._preguntaActualT1 = 0;
+      this._preguntaActual = 0;
     }
 
     this._cd.markForCheck();
@@ -120,15 +122,24 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   private _removeLoading(): void {
     this._loading.remove();
   }
+
+  get preguntaActual(): number {
+    return this._preguntaActual;
+  }
+
+  get tipoEvaluacionActual(): TiposEvaluacion {
+    return this._tipoEvaluacionActual;
+  }
+
   /************************************************************************************************/
   /********************************** EVA T1 ******************************************************/
   /************************************************************************************************/
-  public clickOnNuevaPreguntaT1(): void {
-    this._preguntaActualT1++;
+  public clickOnNuevaPregunta(): void {
+    this._preguntaActual++;
   }
 
-  public clickOnAnteriorPreguntaT1(): void {
-    this._preguntaActualT1--;
+  public clickOnAnteriorPregunta(): void {
+    this._preguntaActual--;
   }
 
   public async clickOnFinalizarT1(): Promise<void> {
@@ -172,15 +183,19 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   }
 
   get pt1(): PuntoEvaluacionT1 {
-    return this._dataForTipoEvaluacion[this._preguntaActualT1]!;
+    return this._dataForTipoEvaluacion[this._preguntaActual]!;
   }
 
   get evaT1(): PuntoEvaluacionT1[] {
     return this._dataForTipoEvaluacion;
   }
 
-  get paT1(): number {
-    return this._preguntaActualT1;
+  get pt2(): PuntoEvaluacionT2 {
+    return this._dataForTipoEvaluacion[this._preguntaActual]!;
+  }
+
+  get evaT2(): PuntoEvaluacionT2[] {
+    return this._dataForTipoEvaluacion;
   }
 
   public ngOnDestroy(): void {
