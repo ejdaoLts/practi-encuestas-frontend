@@ -14,12 +14,12 @@ import { FormsModule } from '@angular/forms';
 @Component({
   standalone: true,
   imports: [CommonModule, IonicModule, FormsModule, PipesModule],
-  selector: 'app-tab3',
-  templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss'],
+  selector: 'app-evaluaciones',
+  templateUrl: 'evaluaciones.page.html',
+  styleUrls: ['evaluaciones.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Tab3Page implements OnInit {
+export class EvaluacionesPage implements OnInit {
   public dataSource = new MatTableDataSource<EvaluacionPendienteDto>([]);
   public evaluacionSelected?: EvaluacionPendienteDto;
   public isModalOpen = false;
@@ -72,8 +72,8 @@ export class Tab3Page implements OnInit {
     if (open) {
       this.isModalOpen = true;
     } else {
-      this._dataForTipoEvaluacion = undefined;
       this.isModalOpen = false;
+      this._preguntaActualT1 = 0;
     }
 
     this._cd.markForCheck();
@@ -105,7 +105,7 @@ export class Tab3Page implements OnInit {
   }
 
   get pt1(): PuntoEvaluacionT1 {
-    return this._dataForTipoEvaluacion[this._preguntaActualT1];
+    return this._dataForTipoEvaluacion[this._preguntaActualT1]!;
   }
 
   get evaT1(): PuntoEvaluacionT1[] {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Either } from '@eklipse/utilities';
 import { firstValueFrom, map } from 'rxjs';
-import { orderBy } from 'lodash';
+import { cloneDeep, orderBy } from 'lodash';
 import { PuntoEvaluacionT1 } from '@http/dtos/evaluaciones';
 import { EvaluacionDataT1Response } from '@http/responses';
 import { TiposEvaluacion } from '@http/constants';
@@ -12,22 +12,22 @@ type Result1 = Either<boolean, PuntoEvaluacionT1[]>;
 
 @Injectable({ providedIn: 'root' })
 export class GetDataForGenerateEvaluacionService extends BaseHttp {
-  //private _dataForEvaluacionTipo1!: PuntoEvaluacionT1[];
+  private _dataForEvaluacionTipo1!: PuntoEvaluacionT1[];
 
   public async execute(tipo: TiposEvaluacion): Promise<Result1> {
     try {
       let result: any;
 
       if (tipo === TiposEvaluacion.T1) {
-        //if (!this._dataForEvaluacionTipo1) {
-        result = await this._getEvaTipo1();
-        //  this._dataForEvaluacionTipo1 = result;
-        //} else {
-        //  result = this._dataForEvaluacionTipo1;
-        //}
+        if (!this._dataForEvaluacionTipo1) {
+          result = await this._getEvaTipo1();
+          this._dataForEvaluacionTipo1 = result;
+        } else {
+          result = this._dataForEvaluacionTipo1;
+        }
       }
 
-      return Either.right(result);
+      return Either.right(cloneDeep(result));
     } catch (error) {
       return Either.left(false);
     }
