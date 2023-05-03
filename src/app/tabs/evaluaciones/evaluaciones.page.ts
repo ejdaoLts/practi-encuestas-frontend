@@ -101,9 +101,10 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     result.fold({
       right: _ => {
         this._instanceDataSource(_);
-        this._removeLoading();
       },
     });
+
+    this._removeLoading();
   }
 
   private _instanceDataSource(data: EvaluacionPendienteDto[]): void {

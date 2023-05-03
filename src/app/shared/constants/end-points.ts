@@ -8,5 +8,6 @@ export const END_POINTS = {
       LOGIN: `${apiUrl}/api/v1/login`,
     },
     EVALUACIONES: `${apiUrl}/api/v1/evaluaciones`,
+    ENTIDADES: `${apiUrl}/api/v1/entidades`,
   },
 };

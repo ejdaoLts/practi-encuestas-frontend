@@ -8,11 +8,11 @@ export const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadComponent: () => import('./tab1/tab1.page').then(m => m.Tab1Page),
+        loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page),
       },
       {
-        path: 'tab2',
-        loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page),
+        path: 'entidades',
+        loadComponent: () => import('./entidades/entidades.page').then(m => m.EntidadesPage),
       },
       {
         path: 'evaluaciones',
@@ -21,14 +21,14 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/home',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/home',
     pathMatch: 'full',
   },
 ];

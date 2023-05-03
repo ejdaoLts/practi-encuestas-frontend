@@ -1,0 +1,40 @@
+<ion-content [fullscreen]="true" class="tab-container ion-padding">
+  <section class="tab-content">
+    <ion-toolbar>
+      <ion-label><b>{{dataSource.data.length}} ENTIDADES REGISTRADAS</b></ion-label>
+      <ion-buttons slot="end">
+        <ion-button (click)="refresh()"><ion-icon name="refresh-outline"></ion-icon></ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+
+    <ion-item>
+      <ion-input [formControl]="filter" labelPlacement="floating" label="Buscar"></ion-input>
+      <ion-buttons slot="end" *ngIf="filter.value">
+        <ion-button (click)="filter.setValue('')" color="dark">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+
+    <div *ngFor="let el of dataSource.filteredData">
+      <ion-card class="tab-card">
+        <!-- (click)="clickOnToggleModal(true, el)" -->
+        <ion-card-header>
+          <ion-card-title>
+            {{el.nombre}}<br />
+            <span class="card-sub-in-title"> NIT {{el.numero_documento }} </span>
+            <br />
+            <ion-card-subtitle> <b>Ultima evaluación</b> Hace un mes </ion-card-subtitle>
+          </ion-card-title>
+        </ion-card-header>
+
+        <div *ngIf="el.representante">
+          <ion-card-content style="padding: 0 10px">
+            <b>Representante:</b> {{el.representante.nombre_completo}}<br />
+            <b>Telefono:</b> 1234567899
+          </ion-card-content>
+        </div>
+      </ion-card>
+    </div>
+  </section>
+</ion-content>
