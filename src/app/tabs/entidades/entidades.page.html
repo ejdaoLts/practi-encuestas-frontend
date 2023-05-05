@@ -1,6 +1,10 @@
-<ion-content [fullscreen]="true" class="tab-container ion-padding">
+<div class="tab-container ion-padding">
   <section class="tab-content">
     <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="add()"><ion-icon name="add-outline"></ion-icon></ion-button>
+      </ion-buttons>
+
       <ion-label><b>{{dataSource.data.length}} ENTIDADES REGISTRADAS</b></ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="refresh()"><ion-icon name="refresh-outline"></ion-icon></ion-button>
@@ -15,26 +19,28 @@
         </ion-button>
       </ion-buttons>
     </ion-item>
-
-    <div *ngFor="let el of dataSource.filteredData">
-      <ion-card class="tab-card">
-        <!-- (click)="clickOnToggleModal(true, el)" -->
-        <ion-card-header>
-          <ion-card-title>
-            {{el.nombre}}<br />
-            <span class="card-sub-in-title"> NIT {{el.numero_documento }} </span>
-            <br />
-            <ion-card-subtitle> <b>Ultima evaluación</b> Hace un mes </ion-card-subtitle>
-          </ion-card-title>
-        </ion-card-header>
-
-        <div *ngIf="el.representante">
-          <ion-card-content style="padding: 0 10px">
-            <b>Representante:</b> {{el.representante.nombre_completo}}<br />
-            <b>Telefono:</b> 1234567899
-          </ion-card-content>
-        </div>
-      </ion-card>
-    </div>
   </section>
+</div>
+
+<ion-content>
+  <ion-card *ngFor="let el of dataSource.filteredData" class="tab-card">
+    <!-- (click)="clickOnToggleModal(true, el)" -->
+    <ion-card-header>
+      <ion-card-title>
+        {{el.nombre}}<br />
+        <span class="card-sub-in-title"> NIT {{el.numero_documento }} </span>
+        <br />
+        <ion-card-subtitle>
+          <b>Ultima evaluación hace</b> {{el.fecha_ultima_evaluacion | timeFromNow}}
+        </ion-card-subtitle>
+      </ion-card-title>
+    </ion-card-header>
+
+    <div *ngIf="el.representante">
+      <ion-card-content style="padding: 0 10px">
+        <b>Representante:</b> {{el.representante.nombre_completo}}<br />
+        <b>Telefono:</b> 1234567899
+      </ion-card-content>
+    </div>
+  </ion-card>
 </ion-content>

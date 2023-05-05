@@ -8,4 +8,5 @@ export interface EntidadResponse {
   tipo: number;
   nombre: string;
   representante?: UsuarioResponse;
+  fecha_ultima_evaluacion: string;
 }

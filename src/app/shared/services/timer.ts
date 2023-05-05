@@ -7,9 +7,6 @@ import(`dayjs/locale/es`);
 
 dayjs.extend(relativeTime);
 
-type TFNT = string | number | Date | null | undefined;
-type lang = 'es' | 'en';
-
 export const GCM_TIME_FROM_NOW_LANG: any = {
   es: {
     year: 'año',
@@ -39,15 +36,6 @@ export const GCM_TIME_FROM_NOW_LANG: any = {
     second: 'second',
     seconds: 'seconds',
   },
-};
-
-export const extensionAgo = (time: string, lang: lang, upd: boolean, ago: boolean) => {
-  switch (lang) {
-    case 'es':
-      return `${upd ? 'actualizado ' : ''} ${ago ? 'hace ' : ''}${time}`;
-    case 'en':
-      return `${upd ? 'updated ' : ''}${time}${ago ? ' ago' : ''}`;
-  }
 };
 
 export enum FormatTimes {
@@ -157,13 +145,13 @@ export class TimerService extends TimeUtilities {
    * @returns string
    */
   public timeFromNow(
-    date: TFNT,
+    date: CanBeDate,
     options: {
-      from?: TFNT;
+      from?: CanBeDate;
       showAll?: boolean;
       upd?: boolean;
       ago?: boolean;
-      lang?: lang;
+      lang?: Lang;
     } = {}
   ) {
     options = {
@@ -268,7 +256,7 @@ export class TimerService extends TimeUtilities {
     exedent: number,
     type: 1 | 2 | 3 | 4 | 5 | 6,
     concatenated: boolean,
-    lg: lang,
+    lg: Lang,
     upd: boolean,
     ago: boolean
   ): string {
@@ -287,7 +275,7 @@ export class TimerService extends TimeUtilities {
         Math.floor(exedent) === 1 ? tv[calendar] : tv[`${calendar}s`]
       }`;
 
-      return extensionAgo(v, lg, upd, ago);
+      return v;
     } else {
       return '';
     }

@@ -12,10 +12,11 @@ import { Subscription } from 'rxjs';
 import { EntidadResponse } from '@http/responses';
 import { EntidadesCrudService } from '@http/services/entidades';
 import { IonicModule, LoadingController } from '@ionic/angular';
+import { PipesModule } from '@shared/pipes';
 
 @Component({
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule],
+  imports: [IonicModule, CommonModule, ReactiveFormsModule, PipesModule],
   selector: 'app-entidades',
   templateUrl: 'entidades.page.html',
   styleUrls: ['entidades.page.scss'],
@@ -44,6 +45,10 @@ export class EntidadesPage implements OnInit, OnDestroy {
 
   public refresh() {
     this._fetchEntidades(true);
+  }
+
+  public add() {
+    console.log('hey');
   }
 
   private async _fetchEntidades(refresh = false) {

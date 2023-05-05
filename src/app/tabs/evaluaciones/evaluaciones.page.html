@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="tab-container ion-padding">
+<div class="tab-container ion-padding">
   <section class="tab-content">
     <ion-toolbar>
       <ion-label><b>{{dataSource.data.length}} EVALUACIONES PENDIENTES</b></ion-label>
@@ -15,191 +15,195 @@
         </ion-button>
       </ion-buttons>
     </ion-item>
-
-    <div *ngFor="let el of dataSource.filteredData">
-      <ion-card class="tab-card" (click)="clickOnToggleModal(true, el)">
-        <ion-card-header>
-          <ion-card-title>
-            {{el.entidad.nombre}}
-            <span class="card-sub-in-title"> ({{el.created_at | formatDate : 4}}) </span>
-          </ion-card-title>
-          <ion-card-subtitle>
-            {{ el.last_update ? 'ACTUALIZADA EL ' + (el.last_update | formatDate : 4) : 'NO HA ' +
-            'EMPEZADO ESTA EVALUACIÓN' }}
-          </ion-card-subtitle>
-        </ion-card-header>
-
-        <ion-card-content> {{el.tipo_evaluacion.nombre}} </ion-card-content>
-      </ion-card>
-    </div>
   </section>
+</div>
 
-  <ion-modal [isOpen]="isModalOpen">
-    <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{preguntaActual + 1}} de {{evaT1.length}}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <div class="ion-padding" style="padding-bottom: 0px">
-        <span class="ion-title"> {{evaluacionSelected?.tipo_evaluacion?.nombre}} </span>
-        <br />
-        <span class="ion-subtitle"> {{evaluacionSelected?.tipo_evaluacion?.descripcion}} </span>
-      </div>
+<ion-content>
+  <ion-card
+    class="tab-card"
+    *ngFor="let el of dataSource.filteredData"
+    (click)="clickOnToggleModal(true, el)"
+  >
+    <ion-card-header>
+      <ion-card-title>
+        {{el.entidad.nombre}}
+        <span class="card-sub-in-title"> ({{el.created_at | formatDate : 4}}) </span>
+      </ion-card-title>
+      <ion-card-subtitle>
+        {{ el.last_update ? 'ACTUALIZADA EL ' + (el.last_update | formatDate : 4) : 'NO HA ' +
+        'EMPEZADO ESTA EVALUACIÓN' }}
+      </ion-card-subtitle>
+    </ion-card-header>
 
-      <!--------------------------------------------------------------------------------------->
-      <!--------------------------------------------------------------------------------------->
-      <!--------------------------------------EVA 1 ------------------------------------------->
-      <!--------------------------------------------------------------------------------------->
-      <!--------------------------------------------------------------------------------------->
-      <ion-content
-        class="ion-padding"
-        [style]="'max-height: ' +(tipoEvaluacionActual === 1 ? 150 : 250) +'px'"
-      >
-        <div *ngIf="[tiposEvaluacion.T1, tiposEvaluacion.T2].indexOf(tipoEvaluacionActual) >= 0">
-          <div class="eva1-grupo">
-            <b>CONDICIÓN DE CALIDAD:</b><br />{{pt1.grupo.orden}} - {{pt1.grupo.descripcion}}
-          </div>
-          <div class="eva1-nombre">
-            <b>ASPECTOS A EVALUAR DE LA CONDICIÓN: </b><br />{{pt1.nombre}}
-          </div>
-          <div class="eva1-documental" *ngIf="pt1.documental">
-            <b>DOCUMENTAL:</b><br />{{pt1.documental}}
-          </div>
-        </div>
-      </ion-content>
-
-      <ion-content
-        class="ion-padding"
-        *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0"
-      >
-        <ion-checkbox
-          labelPlacement="end"
-          [checked]="pt1.inspeccionVisual"
-          [(ngModel)]="pt1.inspeccionVisual"
-        >
-          <ion-icon name="eye-outline"></ion-icon><span>(inspección visual)</span>
-        </ion-checkbox>
-
-        <ion-checkbox
-          labelPlacement="end"
-          [checked]="pt1.revisionDocumental"
-          [(ngModel)]="pt1.revisionDocumental"
-        >
-          <ion-icon name="document-text-outline"></ion-icon><span>(Revisión documental)</span>
-        </ion-checkbox>
-
-        <ion-checkbox
-          labelPlacement="end"
-          [checked]="pt1.entrevistaActores"
-          [(ngModel)]="pt1.entrevistaActores"
-        >
-          <ion-icon name="people-outline"></ion-icon><span>(Entrevista / reunión con actores)</span>
-        </ion-checkbox>
-
-        <br />
-        <ion-radio-group
-          [allowEmptySelection]="true"
-          value="valoracion"
-          [(ngModel)]="pt1.valoracionCondicion"
-        >
-          <ion-radio [value]="1">Cumple</ion-radio><br />
-          <ion-radio [value]="2">Cumple parcialmente</ion-radio><br />
-          <ion-radio [value]="3">No cumple</ion-radio><br />
-          <ion-radio [value]="4">No aplica</ion-radio><br />
-        </ion-radio-group>
-
-        <br />
-
-        <ion-item>
-          <ion-textarea
-            labelPlacement="floating"
-            fill="outline"
-            placeholder="Observaciones (opcional)"
-            [(ngModel)]="pt1.observaciones"
-          ></ion-textarea>
-        </ion-item>
-      </ion-content>
-
-      <ion-footer *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0">
-        <ion-toolbar>
-          <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
-            Anterior
-          </ion-button>
-
-          <ion-button
-            *ngIf="preguntaActual < evaT1.length - 1"
-            (click)="clickOnNuevaPregunta()"
-            slot="end"
-            [disabled]="!pt1.valoracionCondicion"
-          >
-            Siguiente
-          </ion-button>
-
-          <ion-button
-            *ngIf="preguntaActual === evaT1.length - 1"
-            (click)="clickOnFinalizarT1()"
-            slot="end"
-            color="success"
-            [disabled]="!pt1.valoracionCondicion"
-          >
-            Finalizar
-          </ion-button>
-        </ion-toolbar>
-      </ion-footer>
-
-      <!--------------------------------------------------------------------------------------->
-      <!--------------------------------------------------------------------------------------->
-      <!--------------------------------------EVA 2 ------------------------------------------->
-      <!--------------------------------------------------------------------------------------->
-      <!--------------------------------------------------------------------------------------->
-      <ion-content
-        class="ion-padding"
-        *ngIf="[tiposEvaluacion.T2 ].indexOf(tipoEvaluacionActual) >= 0"
-      >
-        <ion-radio-group
-          [allowEmptySelection]="true"
-          value="valoracion"
-          [(ngModel)]="pt2.gradoAcuerdo"
-        >
-          <ion-radio [value]="5">Totalmente de acuerdo</ion-radio><br />
-          <ion-radio [value]="4">De acuerdo</ion-radio><br />
-          <ion-radio [value]="3">Ni de Acuerdo Ni en Desacuerdo</ion-radio><br />
-          <ion-radio [value]="2">En desacuerdo</ion-radio><br />
-          <ion-radio [value]="1">Totalmente en desacuerdo</ion-radio><br />
-          <ion-radio [value]="null">No aplica</ion-radio><br />
-        </ion-radio-group>
-      </ion-content>
-
-      <ion-footer *ngIf="[tiposEvaluacion.T2 ].indexOf(tipoEvaluacionActual) >= 0">
-        <ion-toolbar>
-          <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
-            Anterior
-          </ion-button>
-
-          <ion-button
-            *ngIf="preguntaActual < evaT2.length - 1"
-            (click)="clickOnNuevaPregunta()"
-            slot="end"
-            [disabled]="pt2.gradoAcuerdo === undefined"
-          >
-            Siguiente
-          </ion-button>
-
-          <ion-button
-            *ngIf="preguntaActual === evaT1.length - 1"
-            (click)="''"
-            slot="end"
-            color="success"
-            [disabled]="!pt2.gradoAcuerdo"
-          >
-            Finalizar
-          </ion-button>
-        </ion-toolbar>
-      </ion-footer>
-    </ng-template>
-  </ion-modal>
+    <ion-card-content> {{el.tipo_evaluacion.nombre}} </ion-card-content>
+  </ion-card>
 </ion-content>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{preguntaActual + 1}} de {{evaT1.length}}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <div class="ion-padding" style="padding-bottom: 0px">
+      <span class="ion-title"> {{evaluacionSelected?.tipo_evaluacion?.nombre}} </span>
+      <br />
+      <span class="ion-subtitle"> {{evaluacionSelected?.tipo_evaluacion?.descripcion}} </span>
+    </div>
+
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------EVA 1 ------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    <ion-content
+      class="ion-padding"
+      [style]="'max-height: ' +(tipoEvaluacionActual === 1 ? 150 : 250) +'px'"
+    >
+      <div *ngIf="[tiposEvaluacion.T1, tiposEvaluacion.T2].indexOf(tipoEvaluacionActual) >= 0">
+        <div class="eva1-grupo">
+          <b>CONDICIÓN DE CALIDAD:</b><br />{{pt1.grupo.orden}} - {{pt1.grupo.descripcion}}
+        </div>
+        <div class="eva1-nombre">
+          <b>ASPECTOS A EVALUAR DE LA CONDICIÓN: </b><br />{{pt1.nombre}}
+        </div>
+        <div class="eva1-documental" *ngIf="pt1.documental">
+          <b>DOCUMENTAL:</b><br />{{pt1.documental}}
+        </div>
+      </div>
+    </ion-content>
+
+    <ion-content
+      class="ion-padding"
+      *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0"
+    >
+      <ion-checkbox
+        labelPlacement="end"
+        [checked]="pt1.inspeccionVisual"
+        [(ngModel)]="pt1.inspeccionVisual"
+      >
+        <ion-icon name="eye-outline"></ion-icon><span>(inspección visual)</span>
+      </ion-checkbox>
+
+      <ion-checkbox
+        labelPlacement="end"
+        [checked]="pt1.revisionDocumental"
+        [(ngModel)]="pt1.revisionDocumental"
+      >
+        <ion-icon name="document-text-outline"></ion-icon><span>(Revisión documental)</span>
+      </ion-checkbox>
+
+      <ion-checkbox
+        labelPlacement="end"
+        [checked]="pt1.entrevistaActores"
+        [(ngModel)]="pt1.entrevistaActores"
+      >
+        <ion-icon name="people-outline"></ion-icon><span>(Entrevista / reunión con actores)</span>
+      </ion-checkbox>
+
+      <br />
+      <ion-radio-group
+        [allowEmptySelection]="true"
+        value="valoracion"
+        [(ngModel)]="pt1.valoracionCondicion"
+      >
+        <ion-radio [value]="1">Cumple</ion-radio><br />
+        <ion-radio [value]="2">Cumple parcialmente</ion-radio><br />
+        <ion-radio [value]="3">No cumple</ion-radio><br />
+        <ion-radio [value]="4">No aplica</ion-radio><br />
+      </ion-radio-group>
+
+      <br />
+
+      <ion-item>
+        <ion-textarea
+          labelPlacement="floating"
+          fill="outline"
+          placeholder="Observaciones (opcional)"
+          [(ngModel)]="pt1.observaciones"
+        ></ion-textarea>
+      </ion-item>
+    </ion-content>
+
+    <ion-footer *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0">
+      <ion-toolbar>
+        <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
+          Anterior
+        </ion-button>
+
+        <ion-button
+          *ngIf="preguntaActual < evaT1.length - 1"
+          (click)="clickOnNuevaPregunta()"
+          slot="end"
+          [disabled]="!pt1.valoracionCondicion"
+        >
+          Siguiente
+        </ion-button>
+
+        <ion-button
+          *ngIf="preguntaActual === evaT1.length - 1"
+          (click)="clickOnFinalizarT1()"
+          slot="end"
+          color="success"
+          [disabled]="!pt1.valoracionCondicion"
+        >
+          Finalizar
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
+
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------EVA 2 ------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    <!--------------------------------------------------------------------------------------->
+    <ion-content
+      class="ion-padding"
+      *ngIf="[tiposEvaluacion.T2 ].indexOf(tipoEvaluacionActual) >= 0"
+    >
+      <ion-radio-group
+        [allowEmptySelection]="true"
+        value="valoracion"
+        [(ngModel)]="pt2.gradoAcuerdo"
+      >
+        <ion-radio [value]="5">Totalmente de acuerdo</ion-radio><br />
+        <ion-radio [value]="4">De acuerdo</ion-radio><br />
+        <ion-radio [value]="3">Ni de Acuerdo Ni en Desacuerdo</ion-radio><br />
+        <ion-radio [value]="2">En desacuerdo</ion-radio><br />
+        <ion-radio [value]="1">Totalmente en desacuerdo</ion-radio><br />
+        <ion-radio [value]="null">No aplica</ion-radio><br />
+      </ion-radio-group>
+    </ion-content>
+
+    <ion-footer *ngIf="[tiposEvaluacion.T2 ].indexOf(tipoEvaluacionActual) >= 0">
+      <ion-toolbar>
+        <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
+          Anterior
+        </ion-button>
+
+        <ion-button
+          *ngIf="preguntaActual < evaT2.length - 1"
+          (click)="clickOnNuevaPregunta()"
+          slot="end"
+          [disabled]="pt2.gradoAcuerdo === undefined"
+        >
+          Siguiente
+        </ion-button>
+
+        <ion-button
+          *ngIf="preguntaActual === evaT1.length - 1"
+          (click)="''"
+          slot="end"
+          color="success"
+          [disabled]="!pt2.gradoAcuerdo"
+        >
+          Finalizar
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
