@@ -67,7 +67,7 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     const grupos = orderBy(_, 'orden', 'asc');
 
     grupos.forEach(grupo => {
-      const ramdon = false;
+      const ramdon = true;
 
       const inVis = ramdon ? this.getRandomBoolean() : false;
       const revDoc = ramdon ? this.getRandomBoolean() : false;

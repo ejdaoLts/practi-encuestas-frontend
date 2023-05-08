@@ -31,6 +31,9 @@ export class GetEvaluacionesPendientesService extends BaseHttp {
   }
 
   private _map(_: EvaluacionPendienteDto) {
+    //    console.log(_);
+    _.nombreTipoEvaluacion = _.tipo_evaluacion.nombre;
+    _.nombreEntidad = _.entidad.nombre_completo;
     _.created_at = new Date(_.created_at);
     _.last_update = _.last_update ? new Date(_.last_update) : null;
 

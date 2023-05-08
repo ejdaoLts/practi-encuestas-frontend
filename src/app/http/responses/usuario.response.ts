@@ -4,6 +4,7 @@ export interface UsuarioResponse {
   numero_documento: number | null;
   rol_id: number;
   nombre_completo: string;
+  numero_telefono: string;
   email: string;
   username: number | null;
   is_active: number;

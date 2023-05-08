@@ -54,6 +54,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   ) {
     this._subs1 = this.filter.valueChanges.subscribe(_ => {
       this.dataSource.filter = (_ || '').trim().toLowerCase();
+      console.log(this.dataSource.filteredData);
     });
   }
 

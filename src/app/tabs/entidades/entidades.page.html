@@ -2,7 +2,9 @@
   <section class="tab-content">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button (click)="add()"><ion-icon name="add-outline"></ion-icon></ion-button>
+        <ion-button (click)="clickOnToggleModal(true)">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
       </ion-buttons>
 
       <ion-label><b>{{dataSource.data.length}} ENTIDADES REGISTRADAS</b></ion-label>
@@ -27,11 +29,15 @@
     <!-- (click)="clickOnToggleModal(true, el)" -->
     <ion-card-header>
       <ion-card-title>
-        {{el.nombre}}<br />
-        <span class="card-sub-in-title"> NIT {{el.numero_documento }} </span>
+        {{el.nombre_completo}} ({{el.nombre_tipo_entidad}})<br />
+        <span class="card-sub-in-title"> Doc. {{el.numero_documento }} </span>
         <br />
         <ion-card-subtitle>
-          <b>Ultima evaluación hace</b> {{el.fecha_ultima_evaluacion | timeFromNow}}
+          <b *ngIf="el.fecha_ultima_evaluacion">Ultima evaluación hace</b>
+          {{el.fecha_ultima_evaluacion | timeFromNow}}
+          <b *ngIf="!el.fecha_ultima_evaluacion">Ninguna evaluación realizada</b>
+          <br />
+          <b>Telefono:</b> {{ el.telefono}}
         </ion-card-subtitle>
       </ion-card-title>
     </ion-card-header>
@@ -39,8 +45,108 @@
     <div *ngIf="el.representante">
       <ion-card-content style="padding: 0 10px">
         <b>Representante:</b> {{el.representante.nombre_completo}}<br />
-        <b>Telefono:</b> 1234567899
+        <!--  <b *ngIf=" el.representante.numero_telefono">
+          (tel. {{ el.representante.numero_telefono}})
+        </b> -->
+        <br />
       </ion-card-content>
+    </div>
+
+    <div *ngIf="el.entidad">
+      <ion-card-content style="padding: 0 10px">
+        <b>Empleador(a):</b> {{el.entidad.nombre_completo}}<br />
+        <!--  <b *ngIf=" el.representante.numero_telefono">
+          (tel. {{ el.representante.numero_telefono}})
+        </b> -->
+        <br />
+      </ion-card-content>
+    </div>
+
+    <div style="max-width: 100px; margin-top: -10px" *ngIf="el.min_time_last_eva_valid">
+      <ion-select
+        placeholder="Evaluar"
+        style="padding: 10px"
+        (ionChange)="clickOnEvaluar(el, $event)"
+      >
+        <ion-select-option [value]="1"> MATRIZ VERIF. COND. CALIDAD DEL PROCESO </ion-select-option>
+        <ion-select-option [value]="2"> EVAL. PRÁCTICAS FORMATIVAS ESTUDIANTES </ion-select-option>
+      </ion-select>
     </div>
   </ion-card>
 </ion-content>
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Agregar entidad</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-item>
+          <ion-select
+            interface="action-sheet"
+            label="Tipo de documento"
+            placeholder="Tipo de documento"
+            [formControl]="myForm.tipo_documento"
+          >
+            <ion-select-option value="1">NIT</ion-select-option>
+            <ion-select-option value="2">Cedula de ciudadanía</ion-select-option>
+            <ion-select-option value="3">Tarjeta de identidad</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            label="Numero de documento"
+            placeholder="Numero de documento"
+            [formControl]="myForm.numero_documento"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-select
+            [formControl]="myForm.tipo"
+            interface="action-sheet"
+            label="Tipo entidad"
+            placeholder="Tipo entidad"
+          >
+            <ion-select-option value="1">EMPLEADOR(A)</ion-select-option>
+            <ion-select-option value="2">MAESTRO</ion-select-option>
+            <ion-select-option value="3">ESTUDIANTE</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            [formControl]="myForm.nombre_completo"
+            label="Nombre completo"
+            placeholder="Nombre completo"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
+            [formControl]="myForm.telefono"
+            label="Telefono"
+            placeholder="Telefono"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <br />
+      <br />
+
+      <div style="text-align: center">
+        <ion-button [disabled]="myForm.invalid" (click)="clickOnRegistrarEntidad()">
+          REGISTRAR
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

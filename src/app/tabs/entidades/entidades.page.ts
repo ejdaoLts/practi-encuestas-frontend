@@ -6,17 +6,18 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { EntidadResponse } from '@http/responses';
 import { EntidadesCrudService } from '@http/services/entidades';
-import { IonicModule, LoadingController } from '@ionic/angular';
+import { AlertController, IonicModule, LoadingController } from '@ionic/angular';
 import { PipesModule } from '@shared/pipes';
+import { EntidadForm } from './entidad.form';
 
 @Component({
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule, PipesModule],
+  imports: [IonicModule, CommonModule, ReactiveFormsModule, FormsModule, PipesModule],
   selector: 'app-entidades',
   templateUrl: 'entidades.page.html',
   styleUrls: ['entidades.page.scss'],
@@ -26,11 +27,15 @@ export class EntidadesPage implements OnInit, OnDestroy {
   public dataSource = new MatTableDataSource<EntidadResponse>([]);
   public filter = new FormControl('');
 
+  public myForm = new EntidadForm();
+  public isModalOpen = false;
+
   private _loading!: HTMLIonLoadingElement;
   private _subs1: Subscription;
 
   constructor(
     private _entidadesCrud: EntidadesCrudService,
+    private _alertController: AlertController,
     private _loadingCtrl: LoadingController,
     private _cd: ChangeDetectorRef
   ) {
@@ -47,8 +52,57 @@ export class EntidadesPage implements OnInit, OnDestroy {
     this._fetchEntidades(true);
   }
 
-  public add() {
-    console.log('hey');
+  public clickOnToggleModal(open: boolean) {
+    if (open) {
+      this.isModalOpen = true;
+    } else {
+      this.isModalOpen = false;
+      this.myForm.reset();
+    }
+  }
+
+  public async clickOnEvaluar(entidad: EntidadResponse, e: any) {
+    await this._showLoading('Creando nueva evaluación...');
+
+    const result = await this._entidadesCrud.evaluar(entidad, e.detail.value);
+
+    result.fold({
+      right: async () => {
+        const alert = await this._alertController.create({
+          header: 'Estado de la evaluación',
+          message: 'Evaluación creada satisfactoriamente',
+          buttons: ['OK'],
+        });
+
+        await alert.present();
+      },
+      left: async () => {
+        const alert = await this._alertController.create({
+          header: 'Estado de la evaluación',
+          message: 'Algo salió mal al crear la evaluación',
+          buttons: ['OK'],
+        });
+
+        await alert.present();
+      },
+    });
+
+    this._removeLoading();
+  }
+
+  public async clickOnRegistrarEntidad() {
+    await this._showLoading('Registrando nueva entidad...');
+
+    const result = await this._entidadesCrud.create(this.myForm.model);
+
+    result.fold({
+      right: _ => {
+        this._removeLoading();
+
+        this.isModalOpen = false;
+        this.myForm.reset();
+      },
+    });
   }
 
   private async _fetchEntidades(refresh = false) {
@@ -58,6 +112,7 @@ export class EntidadesPage implements OnInit, OnDestroy {
 
     result.fold({
       right: _ => {
+        //console.log(_);
         this._instanceDataSource(_);
       },
     });
@@ -71,10 +126,12 @@ export class EntidadesPage implements OnInit, OnDestroy {
     });
 
     this._loading.present();
+    this._cd.markForCheck();
   }
 
   private _removeLoading(): void {
     this._loading.remove();
+    this._cd.markForCheck();
   }
 
   private _instanceDataSource(data: EntidadResponse[]): void {

@@ -1,4 +1,6 @@
 export interface EvaluacionPendienteDto {
+  nombreTipoEvaluacion: string;
+  nombreEntidad: string;
   id: number;
   tipo_id: number;
   entidad_id: number;
@@ -28,6 +30,6 @@ export interface EvaluacionPendienteDto {
     tipo_documento: number;
     numero_documento: string;
     tipo: number;
-    nombre: string;
+    nombre_completo: string;
   };
 }
