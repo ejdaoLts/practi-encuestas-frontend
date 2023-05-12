@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Either } from '@eklipse/utilities';
-import { firstValueFrom, map } from 'rxjs';
-import { cloneDeep, orderBy } from 'lodash';
-import { EvaluacionPendienteDto, PuntoEvaluacionT1 } from '@http/dtos/evaluaciones';
+import { firstValueFrom } from 'rxjs';
+import { cloneDeep } from 'lodash';
+import {
+  EvaluacionPendienteDto,
+  PuntoEvaluacionT1,
+  PuntoEvaluacionT2,
+} from '@http/dtos/evaluaciones';
 import { TiposEvaluacion } from '@http/constants';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
-import { PuntoEvaluacionT1Payload } from '@http/payloads';
+import { PuntoEvaluacionT1Payload, PuntoEvaluacionT2Payload } from '@http/payloads';
 
 type Result1 = Either<boolean, any[]>;
 
@@ -21,6 +25,7 @@ export class CalificarEvaluacionService extends BaseHttp {
       let result: any;
 
       if (tipo === TiposEvaluacion.T1) result = await this._calificarEvalT1(data, evaluacion);
+      if (tipo === TiposEvaluacion.T2) result = await this._calificarEvalT2(data, evaluacion);
 
       return Either.right(cloneDeep(result));
     } catch (error) {
@@ -47,6 +52,23 @@ export class CalificarEvaluacionService extends BaseHttp {
 
     return firstValueFrom(
       this._http.post<any[]>(`${END_POINTS.V1.EVALUACIONES}/t1/calificar`, payload)
+    );
+  }
+
+  private _calificarEvalT2(
+    puntosEvaluados: PuntoEvaluacionT2[],
+    evaluacion: EvaluacionPendienteDto
+  ): Promise<any[]> {
+    const payload: PuntoEvaluacionT2Payload[] = puntosEvaluados.map(_ => {
+      return {
+        eva_id: evaluacion.id,
+        aspva_id: _.id,
+        nivel_acuerdo: _.gradoAcuerdo!,
+      };
+    });
+
+    return firstValueFrom(
+      this._http.post<any[]>(`${END_POINTS.V1.EVALUACIONES}/t2/calificar`, payload)
     );
   }
 }

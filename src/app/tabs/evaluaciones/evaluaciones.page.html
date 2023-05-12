@@ -146,7 +146,7 @@
 
         <ion-button
           *ngIf="preguntaActual === evaT1.length - 1"
-          (click)="clickOnFinalizarT1()"
+          (click)="clickOnFinalizarT1OrT2(1)"
           slot="end"
           color="success"
           [disabled]="!pt1.valoracionCondicion"
@@ -196,7 +196,7 @@
 
         <ion-button
           *ngIf="preguntaActual === evaT1.length - 1"
-          (click)="''"
+          (click)="clickOnFinalizarT1OrT2(2)"
           slot="end"
           color="success"
           [disabled]="!pt2.gradoAcuerdo"

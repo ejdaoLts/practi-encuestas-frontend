@@ -144,7 +144,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._preguntaActual--;
   }
 
-  public async clickOnFinalizarT1(): Promise<void> {
+  public async clickOnFinalizarT1OrT2(tipoEvaluacion: TiposEvaluacion): Promise<void> {
     this._loading = await this._loadingCtrl.create({
       message: 'Calificando evaluación, por favor espere',
     });
@@ -152,7 +152,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._cd.markForCheck();
 
     const res = await this._calificarEvaluacion.execute(
-      TiposEvaluacion.T1,
+      tipoEvaluacion,
       this.evaluacionSelected!,
       this._dataForTipoEvaluacion
     );
