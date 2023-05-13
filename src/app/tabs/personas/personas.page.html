@@ -7,7 +7,7 @@
         </ion-button>
       </ion-buttons>
 
-      <ion-label><b>{{dataSource.data.length}} ENTIDADES REGISTRADAS</b></ion-label>
+      <ion-label><b>{{dataSource.data.length}} PERSONAS REGISTRADAS</b></ion-label>
       <ion-buttons slot="end">
         <ion-button (click)="refresh()"><ion-icon name="refresh-outline"></ion-icon></ion-button>
       </ion-buttons>
@@ -71,7 +71,12 @@
         <ion-select-option [value]="1" *ngIf="[1].indexOf(el.tipo) >= 0">
           MATRIZ VERIF. COND. CALIDAD DEL PROCESO
         </ion-select-option>
-        <!--  <ion-select-option [value]="3"> EVAL. PRÁCTICAS FORMATIVAS ESTUDIANTES </ion-select-option> -->
+        <ion-select-option [value]="3" *ngIf="[2].indexOf(el.tipo) >= 0">
+          EVAL. PRÁCTICAS FORMATIVAS MAESTROS
+        </ion-select-option>
+        <ion-select-option [value]="2" *ngIf="[3].indexOf(el.tipo) >= 0">
+          EVAL. PRÁCTICAS FORMATIVAS ESTUDIANTES
+        </ion-select-option>
       </ion-select>
     </div>
   </ion-card>
@@ -90,7 +95,6 @@
 
     <ion-content>
       <ion-list>
-        <!--
         <ion-item>
           <ion-select
             interface="action-sheet"
@@ -98,12 +102,10 @@
             placeholder="Tipo de documento"
             [formControl]="myForm.tipo_documento"
           >
-            <ion-select-option value="1">NIT</ion-select-option>
             <ion-select-option value="2">Cedula de ciudadanía</ion-select-option>
             <ion-select-option value="3">Tarjeta de identidad</ion-select-option>
           </ion-select>
         </ion-item>
-      -->
 
         <ion-item>
           <ion-input
@@ -113,18 +115,17 @@
           ></ion-input>
         </ion-item>
 
-        <!--   <ion-item>
+        <ion-item>
           <ion-select
             [formControl]="myForm.tipo"
             interface="action-sheet"
             label="Tipo entidad"
             placeholder="Tipo entidad"
           >
-            <ion-select-option value="1">EMPLEADOR(A)</ion-select-option>
             <ion-select-option value="2">MAESTRO</ion-select-option>
             <ion-select-option value="3">ESTUDIANTE</ion-select-option>
           </ion-select>
-        </ion-item> -->
+        </ion-item>
 
         <ion-item>
           <ion-input
@@ -141,6 +142,12 @@
             placeholder="Telefono"
           ></ion-input>
         </ion-item>
+
+        <div style="margin: 10px 10px">
+          <gcm-autocomplete-field [formControl]="myForm.entidad_id" option="nombre_completo">
+            Empleador(a)
+          </gcm-autocomplete-field>
+        </div>
       </ion-list>
 
       <br />

@@ -2,14 +2,15 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { maxLength, onlyNumber, required } from '@eklipse/utilities';
 import { CreateEntidadPayload } from '@http/payloads';
 
-export class EntidadForm extends FormGroup {
+export class PersonaForm extends FormGroup {
   constructor() {
     super({
-      tipo_documento: new FormControl(1, [required, onlyNumber]),
+      tipo_documento: new FormControl(null, [required, onlyNumber]),
       numero_documento: new FormControl(null, [required, maxLength(20)]),
-      tipo: new FormControl(1, [required, onlyNumber]),
+      tipo: new FormControl(null, [required, onlyNumber]),
       nombre_completo: new FormControl(null, [required, maxLength(100)]),
       telefono: new FormControl(null, [required, maxLength(15)]),
+      entidad_id: new FormControl(null, [required]),
     });
   }
 
@@ -28,6 +29,9 @@ export class EntidadForm extends FormGroup {
   get telefono(): FormControl {
     return this.get('telefono') as FormControl;
   }
+  get entidad_id(): FormControl {
+    return this.get('entidad_id') as FormControl;
+  }
 
   public get model(): CreateEntidadPayload {
     return {
@@ -36,6 +40,15 @@ export class EntidadForm extends FormGroup {
       tipo: this.tipo.value,
       nombre_completo: ((this.nombre_completo.value || '') as string).toUpperCase(),
       telefono: this.telefono.value,
+      entidad_id: this.entidad_id.value.id,
     };
+  }
+
+  public resett() {
+    this.tipo_documento.setValue(null);
+    this.numero_documento.setValue(null);
+    this.tipo.setValue(null);
+    this.nombre_completo.setValue(null);
+    this.telefono.setValue(null);
   }
 }

@@ -26,6 +26,7 @@
     "@capacitor/haptics": "4.1.0",
     "@capacitor/keyboard": "4.1.1",
     "@capacitor/status-bar": "4.1.1",
+    "@eklipse/components": "^11.0.1",
     "@eklipse/utilities": "^5.0.1",
     "@ionic/angular": "^7.0.0",
     "dayjs": "^1.11.7",

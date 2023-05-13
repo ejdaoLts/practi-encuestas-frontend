@@ -12,7 +12,7 @@ type Result3 = Either<boolean, any>;
 type Result4 = Either<boolean, { id: number; nombre_completo: string }[]>;
 
 @Injectable({ providedIn: 'root' })
-export class EntidadesCrudService extends BaseHttp {
+export class PersonasCrudService extends BaseHttp {
   private _entidades = new BehaviorSubject<EntidadResponse[]>([]);
   private _entidades$ = this._entidades.asObservable();
 
@@ -114,7 +114,7 @@ export class EntidadesCrudService extends BaseHttp {
     });
 
     return firstValueFrom(
-      this._http.get<EntidadResponse[]>(`${END_POINTS.V1.ENTIDADES}`, { params: { t } }).pipe(
+      this._http.get<EntidadResponse[]>(`${END_POINTS.V1.ENTIDADES}`, { params: t }).pipe(
         tap(entidades => {
           entidades.map(_ => {
             _.min_time_last_eva_valid = true;
@@ -133,7 +133,7 @@ export class EntidadesCrudService extends BaseHttp {
 
   private async _suggestions(nombre: string): Promise<{ id: number; nombre_completo: string }[]> {
     return firstValueFrom(
-      this._http.get<EntidadResponse[]>(`${END_POINTS.V1.ENTIDADES}suggestions/${nombre}`).pipe()
+      this._http.get<EntidadResponse[]>(`${END_POINTS.V1.ENTIDADES}/suggestions/${nombre}`).pipe()
     );
   }
 }

@@ -17,6 +17,7 @@ import {
   HttpTimeoutInterceptor,
   UnauthorizedInterceptor,
 } from '@shared/interceptors';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 if (environment.production) {
   enableProdMode();
@@ -28,6 +29,7 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
 
     importProvidersFrom(
+      BrowserAnimationsModule,
       IonicModule.forRoot({ mode: 'ios' }),
       /*RouterModule.forRoot([], { preloadingStrategy: PreloadingStrategy }),*/
       HttpClientModule

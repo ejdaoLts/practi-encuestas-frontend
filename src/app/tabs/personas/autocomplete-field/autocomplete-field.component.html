@@ -1,0 +1,43 @@
+<div class="mat-form-container {{ class }}" [style]="style">
+  <mat-form-field
+    [class.mat-form-field-invalid]="isInvalid || (isSubmitted && control.invalid)"
+    [appearance]="appearance"
+    [color]="color"
+  >
+    <mat-label>
+      <ng-content></ng-content>{{ ' ' }}<span class="gcm-field__danger-x" *ngIf="required">*</span>
+    </mat-label>
+    <input
+      matInput
+      [autocomplete]="autocomplete"
+      [matAutocomplete]="auto"
+      [value]="value"
+      (keyup)="onChange($event)"
+      (change)="onChange($event)"
+      [disabled]="disabled"
+      (focus)="onFocus()"
+      (focusout)="onFocusout()"
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      *ngIf="(control.value || value) && hasClearButton"
+      (click)="onClearControl()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let suggestion of filteredOptions | async"
+        [value]="suggestion[option]"
+        (click)="onUpdate(suggestion)"
+      >
+        {{ suggestion[option] }}
+      </mat-option>
+      <mat-option *ngIf="notSuggestions">
+        <span class="mat-gcm-autocomplete-not-records"> No se encuentran resultados </span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

@@ -26,3 +26,9 @@
 @import '@ionic/angular/css/flex-utils.css';
 
 @import 'assets/main';
+
+@import 'node_modules/@eklipse/components/assets/variables';
+$SIDEBAR_MD_RESOLUTION: 981px;
+@import 'node_modules/@eklipse/components/assets/main';
+@import 'node_modules/@eklipse/components/assets/material/main';
+@import 'node_modules/@eklipse/components/assets/fonts/main';

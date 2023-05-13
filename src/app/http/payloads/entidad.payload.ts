@@ -4,4 +4,5 @@ export interface CreateEntidadPayload {
   tipo: number;
   nombre_completo: string;
   telefono: string;
+  entidad_id?: number;
 }

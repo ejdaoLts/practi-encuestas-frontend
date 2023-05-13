@@ -7,8 +7,8 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'home',
-        loadComponent: () => import('./tab2/tab2.page').then(m => m.Tab2Page),
+        path: 'personas',
+        loadComponent: () => import('./personas/personas.page').then(m => m.PersonasPage),
       },
       {
         path: 'entidades',

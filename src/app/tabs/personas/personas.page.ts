@@ -6,35 +6,45 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { Subscription } from 'rxjs';
 import { EntidadResponse } from '@http/responses';
-import { EntidadesCrudService } from '@http/services/entidades';
+import { PersonasCrudService } from '@http/services/entidades';
 import { AlertController, IonicModule, LoadingController } from '@ionic/angular';
+import { PersonaForm } from './persona.form';
 import { PipesModule } from '@shared/pipes';
-import { EntidadForm } from './entidad.form';
+import { GcmAutocompleteField } from './autocomplete-field';
 
 @Component({
   standalone: true,
-  imports: [IonicModule, CommonModule, ReactiveFormsModule, FormsModule, PipesModule],
-  selector: 'app-entidades',
-  templateUrl: 'entidades.page.html',
-  styleUrls: ['entidades.page.scss'],
+  imports: [
+    CommonModule,
+    IonicModule,
+    FormsModule,
+    GcmAutocompleteField,
+    ReactiveFormsModule,
+    PipesModule,
+  ],
+  selector: 'app-personas',
+  templateUrl: 'personas.page.html',
+  styleUrls: ['personas.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EntidadesPage implements OnInit, OnDestroy {
+export class PersonasPage implements OnInit, OnDestroy {
   public dataSource = new MatTableDataSource<EntidadResponse>([]);
   public filter = new FormControl('');
 
-  public myForm = new EntidadForm();
+  public myForm = new PersonaForm();
   public isModalOpen = false;
+
+  customForm = new FormControl();
 
   private _loading!: HTMLIonLoadingElement;
   private _subs1: Subscription;
 
   constructor(
-    private _entidadesCrud: EntidadesCrudService,
+    private _personasCrud: PersonasCrudService,
     private _alertController: AlertController,
     private _loadingCtrl: LoadingController,
     private _cd: ChangeDetectorRef
@@ -57,14 +67,14 @@ export class EntidadesPage implements OnInit, OnDestroy {
       this.isModalOpen = true;
     } else {
       this.isModalOpen = false;
-      this.myForm.reset();
+      this.myForm.resett();
     }
   }
 
   public async clickOnEvaluar(entidad: EntidadResponse, e: any) {
     await this._showLoading('Creando nueva evaluación...');
 
-    const result = await this._entidadesCrud.evaluar(entidad, e.detail.value);
+    const result = await this._personasCrud.evaluar(entidad, e.detail.value);
 
     result.fold({
       right: async () => {
@@ -93,14 +103,14 @@ export class EntidadesPage implements OnInit, OnDestroy {
   public async clickOnRegistrarEntidad() {
     await this._showLoading('Registrando nueva entidad...');
 
-    const result = await this._entidadesCrud.create(this.myForm.model);
+    const result = await this._personasCrud.create(this.myForm.model);
 
     result.fold({
       right: _ => {
         this._removeLoading();
 
         this.isModalOpen = false;
-        this.myForm.reset();
+        this.myForm.resett();
       },
     });
   }
@@ -108,7 +118,7 @@ export class EntidadesPage implements OnInit, OnDestroy {
   private async _fetchEntidades(refresh = false) {
     await this._showLoading();
 
-    const result = await this._entidadesCrud.fetch([1], refresh);
+    const result = await this._personasCrud.fetch([2, 3], refresh);
 
     result.fold({
       right: _ => {
