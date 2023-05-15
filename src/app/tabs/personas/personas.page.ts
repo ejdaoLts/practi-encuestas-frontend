@@ -112,6 +112,10 @@ export class PersonasPage implements OnInit, OnDestroy {
         this.isModalOpen = false;
         this.myForm.resett();
       },
+      left: _ => {
+        this._removeLoading();
+        this._alertNotCreated();
+      },
     });
   }
 
@@ -128,6 +132,16 @@ export class PersonasPage implements OnInit, OnDestroy {
     });
 
     this._removeLoading();
+  }
+
+  private async _alertNotCreated() {
+    const alert = await this._alertController.create({
+      header: 'Estado de la entidad',
+      message: 'Error al crear entidad, puede que ya exista un usuario con este documento',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
   }
 
   private async _showLoading(message = 'Obteniendo entidades registradas...'): Promise<void> {

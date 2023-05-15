@@ -5,9 +5,9 @@ import { CreateEntidadPayload } from '@http/payloads';
 export class EntidadForm extends FormGroup {
   constructor() {
     super({
-      tipo_documento: new FormControl(1, [required, onlyNumber]),
+      tipo_documento: new FormControl(1, [onlyNumber]),
       numero_documento: new FormControl(null, [required, maxLength(20)]),
-      tipo: new FormControl(1, [required, onlyNumber]),
+      tipo: new FormControl(1, [onlyNumber]),
       nombre_completo: new FormControl(null, [required, maxLength(100)]),
       telefono: new FormControl(null, [required, maxLength(15)]),
     });

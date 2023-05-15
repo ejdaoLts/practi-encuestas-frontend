@@ -32,7 +32,7 @@ export class LoginPage {
         right: response => {
           localStorage.setItem(STORAGE_KEYS.authToken, response.token!);
 
-          this._router.navigate(['home/home']);
+          this._router.navigate(['home/personas']);
         },
         left: () => {
           //this._toast.simpleNotification('Usuario y/o contraseña incorrectas');

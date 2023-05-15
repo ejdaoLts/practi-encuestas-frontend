@@ -102,7 +102,21 @@ export class EntidadesPage implements OnInit, OnDestroy {
         this.isModalOpen = false;
         this.myForm.reset();
       },
+      left: _ => {
+        this._removeLoading();
+        this._alertNotCreated();
+      },
     });
+  }
+
+  private async _alertNotCreated() {
+    const alert = await this._alertController.create({
+      header: 'Estado de la entidad',
+      message: 'Error al crear entidad, puede que ya exista un usuario con este documento',
+      buttons: ['OK'],
+    });
+
+    await alert.present();
   }
 
   private async _fetchEntidades(refresh = false) {
