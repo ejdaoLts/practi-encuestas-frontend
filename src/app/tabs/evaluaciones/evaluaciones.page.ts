@@ -54,7 +54,6 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   ) {
     this._subs1 = this.filter.valueChanges.subscribe(_ => {
       this.dataSource.filter = (_ || '').trim().toLowerCase();
-      console.log(this.dataSource.filteredData);
     });
   }
 
@@ -144,7 +143,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._preguntaActual--;
   }
 
-  public async clickOnFinalizarT1OrT2(tipoEvaluacion: TiposEvaluacion): Promise<void> {
+  public async clickOnFinalizarT1OrT2OrT3(tipoEvaluacion: TiposEvaluacion): Promise<void> {
     this._loading = await this._loadingCtrl.create({
       message: 'Calificando evaluación, por favor espere',
     });

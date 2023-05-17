@@ -25,7 +25,8 @@ export class CalificarEvaluacionService extends BaseHttp {
       let result: any;
 
       if (tipo === TiposEvaluacion.T1) result = await this._calificarEvalT1(data, evaluacion);
-      if (tipo === TiposEvaluacion.T2) result = await this._calificarEvalT2(data, evaluacion);
+      if (tipo === TiposEvaluacion.T2) result = await this._califiEvalT2OrT3(data, evaluacion, 2);
+      if (tipo === TiposEvaluacion.T3) result = await this._califiEvalT2OrT3(data, evaluacion, 3);
 
       return Either.right(cloneDeep(result));
     } catch (error) {
@@ -55,9 +56,10 @@ export class CalificarEvaluacionService extends BaseHttp {
     );
   }
 
-  private _calificarEvalT2(
+  private _califiEvalT2OrT3(
     puntosEvaluados: PuntoEvaluacionT2[],
-    evaluacion: EvaluacionPendienteDto
+    evaluacion: EvaluacionPendienteDto,
+    tipo: TiposEvaluacion
   ): Promise<any[]> {
     const payload: PuntoEvaluacionT2Payload[] = puntosEvaluados.map(_ => {
       return {
@@ -68,7 +70,7 @@ export class CalificarEvaluacionService extends BaseHttp {
     });
 
     return firstValueFrom(
-      this._http.post<any[]>(`${END_POINTS.V1.EVALUACIONES}/t2/calificar`, payload)
+      this._http.post<any[]>(`${END_POINTS.V1.EVALUACIONES}/t${tipo}/calificar`, payload)
     );
   }
 }

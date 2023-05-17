@@ -15,6 +15,7 @@ type Result1 = Either<boolean, PuntoEvaluacionT1[]>;
 export class GetDataForGenerateEvaluacionService extends BaseHttp {
   private _dataForEvaluacionTipo1!: PuntoEvaluacionT1[];
   private _dataForEvaluacionTipo2!: PuntoEvaluacionT2[];
+  private _dataForEvaluacionTipo3!: PuntoEvaluacionT2[];
 
   public async execute(tipo: TiposEvaluacion): Promise<Result1> {
     try {
@@ -29,12 +30,21 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
         }
       }
 
-      if (tipo === TiposEvaluacion.T2) {
+      if ([TiposEvaluacion.T2].indexOf(tipo) >= 0) {
         if (!this._dataForEvaluacionTipo2) {
-          result = await this._getEvaTipo2();
+          result = await this._getEvaTipo2Or3(tipo);
           this._dataForEvaluacionTipo2 = result;
         } else {
           result = this._dataForEvaluacionTipo2;
+        }
+      }
+
+      if ([TiposEvaluacion.T3].indexOf(tipo) >= 0) {
+        if (!this._dataForEvaluacionTipo3) {
+          result = await this._getEvaTipo2Or3(tipo);
+          this._dataForEvaluacionTipo3 = result;
+        } else {
+          result = this._dataForEvaluacionTipo3;
         }
       }
 
@@ -52,10 +62,10 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     );
   }
 
-  private _getEvaTipo2(): Promise<PuntoEvaluacionT2[]> {
+  private _getEvaTipo2Or3(tipo: TiposEvaluacion): Promise<PuntoEvaluacionT2[]> {
     return firstValueFrom(
       this._http
-        .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/2`)
+        .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/${tipo}`)
         .pipe(map(_ => this._mapEvaTipo2(_)))
     );
   }
@@ -67,7 +77,7 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     const grupos = orderBy(_, 'orden', 'asc');
 
     grupos.forEach(grupo => {
-      const ramdon = true;
+      const ramdon = false;
 
       const inVis = ramdon ? this.getRandomBoolean() : false;
       const revDoc = ramdon ? this.getRandomBoolean() : false;
