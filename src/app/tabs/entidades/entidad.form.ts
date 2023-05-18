@@ -31,9 +31,9 @@ export class EntidadForm extends FormGroup {
 
   public get model(): CreateEntidadPayload {
     return {
-      tipo_documento: this.tipo_documento.value,
+      tipo_documento: 1,
       numero_documento: this.numero_documento.value,
-      tipo: this.tipo.value,
+      tipo: 1,
       nombre_completo: ((this.nombre_completo.value || '') as string).toUpperCase(),
       telefono: this.telefono.value,
     };

@@ -15,6 +15,8 @@ import { AlertController, IonicModule, LoadingController } from '@ionic/angular'
 import { PersonaForm } from './persona.form';
 import { PipesModule } from '@shared/pipes';
 import { GcmAutocompleteField } from './autocomplete-field';
+import { EvaluacionForm } from './evaluacion.form';
+import { GcmMaestrosAutocompleteField } from './maestros-autocomplete';
 
 @Component({
   standalone: true,
@@ -23,6 +25,7 @@ import { GcmAutocompleteField } from './autocomplete-field';
     IonicModule,
     FormsModule,
     GcmAutocompleteField,
+    GcmMaestrosAutocompleteField,
     ReactiveFormsModule,
     PipesModule,
   ],
@@ -36,7 +39,11 @@ export class PersonasPage implements OnInit, OnDestroy {
   public filter = new FormControl('');
 
   public myForm = new PersonaForm();
+  public myEvalForm = new EvaluacionForm();
   public isModalOpen = false;
+  public isModalGenEvaOpen = false;
+
+  public personaSelected!: EntidadResponse;
 
   customForm = new FormControl();
 
@@ -71,10 +78,26 @@ export class PersonasPage implements OnInit, OnDestroy {
     }
   }
 
-  public async clickOnEvaluar(entidad: EntidadResponse, e: any) {
+  public clickOnToggleGenEvaModal(open: boolean, persona?: EntidadResponse) {
+    if (open) {
+      this.personaSelected = persona!;
+      this.isModalGenEvaOpen = true;
+    } else {
+      this.isModalGenEvaOpen = false;
+      this.myEvalForm.resett();
+    }
+  }
+
+  /*   public async clickOnGenerarEvaluacion(entidad: EntidadResponse) {
+    console.log(entidad);
+    console.log(this.myEvalForm.value);
+    //this.isModalGenEvaOpen = true;
+  } */
+
+  public async clickOnEvaluar(entidad: EntidadResponse) {
     await this._showLoading('Creando nueva evaluación...');
 
-    const result = await this._personasCrud.evaluar(entidad, e.detail.value);
+    const result = await this._personasCrud.evaluar(entidad, this.myEvalForm.model);
 
     result.fold({
       right: async () => {

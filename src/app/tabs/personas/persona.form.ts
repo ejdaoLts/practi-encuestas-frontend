@@ -34,13 +34,14 @@ export class PersonaForm extends FormGroup {
   }
 
   public get model(): CreateEntidadPayload {
+    const entidad_id = this.entidad_id.value ? this.entidad_id.value.id : null;
     return {
       tipo_documento: this.tipo_documento.value,
       numero_documento: this.numero_documento.value,
       tipo: this.tipo.value,
       nombre_completo: ((this.nombre_completo.value || '') as string).toUpperCase(),
       telefono: this.telefono.value,
-      entidad_id: this.entidad_id.value.id,
+      entidad_id,
     };
   }
 
@@ -50,5 +51,6 @@ export class PersonaForm extends FormGroup {
     this.tipo.setValue(null);
     this.nombre_completo.setValue(null);
     this.telefono.setValue(null);
+    this.entidad_id.setValue(null);
   }
 }

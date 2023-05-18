@@ -62,7 +62,17 @@
       </ion-card-content>
     </div>
 
-    <div style="max-width: 100px; margin-top: -10px" *ngIf="el.min_time_last_eva_valid">
+    <ion-icon
+      style="font-size: 24px; margin: -15px 10px 0px 10px"
+      name="add-circle-outline"
+      *ngIf="el.min_time_last_eva_valid"
+      fill="clear"
+      (click)="clickOnToggleGenEvaModal(true, el)"
+    >
+      Evaluar
+    </ion-icon>
+
+    <!-- <div style="max-width: 100px; margin-top: -10px" *ngIf="el.min_time_last_eva_valid">
       <ion-select
         placeholder="Evaluar"
         style="padding: 10px"
@@ -78,15 +88,92 @@
           EVAL. PRÁCTICAS FORMATIVAS ESTUDIANTES
         </ion-select-option>
       </ion-select>
-    </div>
+    </div> -->
   </ion-card>
 </ion-content>
-
-<ion-modal [isOpen]="isModalOpen">
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<!------------------------ GENERAR EVALUACION ------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<ion-modal [isOpen]="isModalGenEvaOpen" [backdropDismiss]="false">
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Agregar entidad</ion-title>
+        <ion-title>Generar evaluación</ion-title>
+        <ion-buttons slot="end" (click)="clickOnToggleGenEvaModal(false)">
+          <ion-button>Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-select label="tipo Evaluación" [formControl]="myEvalForm.tipo"
+        ><!--(ionChange)="clickOnEvaluar(personaSelected, $event)"-->
+        <ion-select-option [value]="1" *ngIf="[2].indexOf(personaSelected.tipo) >= 0">
+          MATRIZ VERIF. COND. CALIDAD DEL PROCESO
+        </ion-select-option>
+        <ion-select-option [value]="3" *ngIf="[2].indexOf(personaSelected.tipo) >= 0">
+          EVAL. PRÁCTICAS FORMATIVAS MAESTROS
+        </ion-select-option>
+        <ion-select-option [value]="2" *ngIf="[3].indexOf(personaSelected.tipo) >= 0">
+          EVAL. PRÁCTICAS FORMATIVAS ESTUDIANTES
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select label="Periodo academico" [formControl]="myEvalForm.periodo_academico"
+        ><!--(ionChange)="clickOnEvaluar(personaSelected, $event)"-->
+        <ion-select-option [value]="1">1</ion-select-option>
+        <ion-select-option [value]="2">2</ion-select-option>
+        <ion-select-option [value]="3">3</ion-select-option>
+        <ion-select-option [value]="4">4</ion-select-option>
+      </ion-select>
+
+      <ion-input
+        label="Programa academico"
+        [formControl]="myEvalForm.programa_academico_nom"
+      ></ion-input>
+
+      <ion-input
+        label="Estudiantes a cargo"
+        [formControl]="myEvalForm.estudiantes_acargo"
+        *ngIf="[2].indexOf(personaSelected.tipo) >= 0"
+      ></ion-input>
+
+      <ion-input
+        label="rotacion"
+        *ngIf="[2].indexOf(personaSelected.tipo) >= 0"
+        [formControl]="myEvalForm.rotacion"
+      ></ion-input>
+
+      <div style="margin: 10px 10px">
+        <gcm-maestros-autocomplete-field
+          [formControl]="myEvalForm.maestro_id"
+          option="nombre_completo"
+          *ngIf="[3].indexOf(personaSelected.tipo) >= 0"
+        >
+          Profesor(a)
+        </gcm-maestros-autocomplete-field>
+      </div>
+
+      <div style="text-align: center">
+        <ion-button [disabled]="myEvalForm.invalid" (click)="clickOnEvaluar(personaSelected)">
+          REGISTRAR
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<!--------------------------- AGREGAR PERSONA ------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------->
+<ion-modal [isOpen]="isModalOpen" [backdropDismiss]="false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Agregar persona</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
         </ion-buttons>

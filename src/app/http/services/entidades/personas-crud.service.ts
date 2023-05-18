@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, firstValueFrom, tap } from 'rxjs';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
 import { EntidadResponse } from '@http/responses';
-import { CreateEntidadPayload } from '@http/payloads';
+import { CreateEntidadPayload, CreateEvaluacionPayload } from '@http/payloads';
 
 type Result1 = Either<boolean, EntidadResponse[]>;
 type Result2 = Either<boolean, EntidadResponse>;
@@ -16,9 +16,9 @@ export class PersonasCrudService extends BaseHttp {
   private _entidades = new BehaviorSubject<EntidadResponse[]>([]);
   private _entidades$ = this._entidades.asObservable();
 
-  public async suggestions(nombre: string): Promise<Result4> {
+  public async suggestions(nombre: string, tipo: number): Promise<Result4> {
     try {
-      const result = await this._suggestions(nombre);
+      const result = await this._suggestions(nombre, tipo);
 
       return Either.right(result);
     } catch (error) {
@@ -26,9 +26,9 @@ export class PersonasCrudService extends BaseHttp {
     }
   }
 
-  public async evaluar(entidad: EntidadResponse, tipo: number): Promise<Result3> {
+  public async evaluar(entidad: EntidadResponse, data: any): Promise<Result3> {
     try {
-      const result = await this._evaluar(entidad, tipo);
+      const result = await this._evaluar(entidad, data);
 
       return Either.right(result);
     } catch (error) {
@@ -72,35 +72,35 @@ export class PersonasCrudService extends BaseHttp {
     );
   }
 
-  private async _evaluar(entidad: EntidadResponse, tipo: number): Promise<any> {
+  private async _evaluar(
+    entidad: EntidadResponse,
+    evaluacion: CreateEvaluacionPayload
+  ): Promise<any> {
+    evaluacion.entidad_id = entidad.id;
+
+    console.log(evaluacion);
     return firstValueFrom(
-      this._http
-        .post<any>(`${END_POINTS.V1.EVALUACIONES}`, {
-          tipo_id: tipo,
-          entidad_id: entidad.id,
+      this._http.post<any>(`${END_POINTS.V1.EVALUACIONES}`, evaluacion).pipe(
+        tap((result: any) => {
+          if (result) {
+            this._entidades.value.map(_ => {
+              if (_.id === entidad.id) {
+                _.fecha_ultima_evaluacion = new Date().toISOString();
+              }
+
+              _.min_time_last_eva_valid = true;
+
+              if (_.fecha_ultima_evaluacion) {
+                const timePast = (new Date() as any) - (new Date(_.fecha_ultima_evaluacion) as any);
+
+                if (timePast < 432000000) _.min_time_last_eva_valid = false;
+              }
+            });
+
+            this._entidades.next(this._entidades.value);
+          }
         })
-        .pipe(
-          tap((result: any) => {
-            if (result) {
-              this._entidades.value.map(_ => {
-                if (_.id === entidad.id) {
-                  _.fecha_ultima_evaluacion = new Date().toISOString();
-                }
-
-                _.min_time_last_eva_valid = true;
-
-                if (_.fecha_ultima_evaluacion) {
-                  const timePast =
-                    (new Date() as any) - (new Date(_.fecha_ultima_evaluacion) as any);
-
-                  if (timePast < 432000000) _.min_time_last_eva_valid = false;
-                }
-              });
-
-              this._entidades.next(this._entidades.value);
-            }
-          })
-        )
+      )
     );
   }
 
@@ -131,9 +131,14 @@ export class PersonasCrudService extends BaseHttp {
     );
   }
 
-  private async _suggestions(nombre: string): Promise<{ id: number; nombre_completo: string }[]> {
+  private async _suggestions(
+    nombre: string,
+    tipo: number
+  ): Promise<{ id: number; nombre_completo: string }[]> {
     return firstValueFrom(
-      this._http.get<EntidadResponse[]>(`${END_POINTS.V1.ENTIDADES}/suggestions/${nombre}`).pipe()
+      this._http
+        .get<EntidadResponse[]>(`${END_POINTS.V1.ENTIDADES}/suggestions/${nombre}/${tipo}`)
+        .pipe()
     );
   }
 }

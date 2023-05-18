@@ -47,10 +47,10 @@ export class Entidad {
     MatAutocompleteModule,
     CommonModule,
   ],
-  selector: 'gcm-autocomplete-field',
+  selector: 'gcm-maestros-autocomplete-field',
   templateUrl: './autocomplete-field.component.html',
 })
-export class GcmAutocompleteField implements OnInit, OnDestroy, ControlValueAccessor {
+export class GcmMaestrosAutocompleteField implements OnInit, OnDestroy, ControlValueAccessor {
   private _unsubscribe$ = new Subject<void>();
 
   @Input() class = '';
@@ -117,7 +117,7 @@ export class GcmAutocompleteField implements OnInit, OnDestroy, ControlValueAcce
           !this.suggestions.filter(suggestion => suggestion.nombre_completo === value).length
         ) {
           this.suggestions = [];
-          const res = await this._personasCrud.suggestions(value, 1);
+          const res = await this._personasCrud.suggestions(value, 2);
 
           res.fold({
             right: entidades => {

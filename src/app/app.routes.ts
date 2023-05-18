@@ -4,10 +4,7 @@ import { AccessControlComponent } from './layouts/access-control';
 //import { AdminPanelComponent } from './layouts/admin-panel/admin-panel.component';
 
 export const routes: Routes = [
-  /* {
-    path: '',
-    loadChildren: () => import('./tabs/tabs.routes').then(m => m.routes),
-  }, */
+  { path: '', redirectTo: 'access-control/login', pathMatch: 'full' },
   {
     path: '',
     component: AccessControlComponent,
@@ -22,11 +19,9 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    //component: AdminPanelComponent,
     children: [
       {
         path: 'home',
-        //loadChildren: () => import('@home/home.page.module').then(m => m.HomeModule),
         loadChildren: () => import('./tabs/tabs.routes').then(m => m.routes),
       },
     ],
