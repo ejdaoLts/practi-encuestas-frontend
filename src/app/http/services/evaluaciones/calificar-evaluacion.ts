@@ -25,8 +25,9 @@ export class CalificarEvaluacionService extends BaseHttp {
       let result: any;
 
       if (tipo === TiposEvaluacion.T1) result = await this._calificarEvalT1(data, evaluacion);
-      if (tipo === TiposEvaluacion.T2) result = await this._califiEvalT2OrT3(data, evaluacion, 2);
-      if (tipo === TiposEvaluacion.T3) result = await this._califiEvalT2OrT3(data, evaluacion, 3);
+      if ([2, 3, 4, 5, 6, 7, 8].indexOf(tipo) >= 0) {
+        result = await this._califiEvalT2OrT3(data, evaluacion, tipo);
+      }
 
       return Either.right(cloneDeep(result));
     } catch (error) {

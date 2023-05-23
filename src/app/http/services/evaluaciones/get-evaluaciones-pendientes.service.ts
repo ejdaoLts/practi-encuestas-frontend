@@ -5,6 +5,7 @@ import { EvaluacionPendienteDto } from '@http/dtos';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
 import { _MatTableDataSource } from '@angular/material/table';
+import { orderBy } from 'lodash';
 
 type Result = Either<boolean, EvaluacionPendienteDto[]>;
 
@@ -14,7 +15,7 @@ export class GetEvaluacionesPendientesService extends BaseHttp {
     try {
       const result = await this._get(onlyMe, onlyPendientes);
 
-      return Either.right(result);
+      return Either.right(orderBy(result, 'created_at', 'desc'));
     } catch (error) {
       return Either.left(false);
     }
@@ -31,7 +32,6 @@ export class GetEvaluacionesPendientesService extends BaseHttp {
   }
 
   private _map(_: EvaluacionPendienteDto) {
-    //    console.log(_);
     _.nombreTipoEvaluacion = _.tipo_evaluacion.nombre;
     _.nombreEntidad = _.entidad.nombre_completo;
     _.created_at = new Date(_.created_at);

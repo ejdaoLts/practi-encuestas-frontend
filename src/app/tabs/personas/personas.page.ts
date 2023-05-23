@@ -107,6 +107,7 @@ export class PersonasPage implements OnInit, OnDestroy {
           buttons: ['OK'],
         });
 
+        this.isModalGenEvaOpen = false;
         await alert.present();
       },
       left: async () => {

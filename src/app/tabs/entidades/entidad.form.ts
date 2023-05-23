@@ -33,7 +33,7 @@ export class EntidadForm extends FormGroup {
     return {
       tipo_documento: 1,
       numero_documento: this.numero_documento.value,
-      tipo: 1,
+      tipo_id: 1,
       nombre_completo: ((this.nombre_completo.value || '') as string).toUpperCase(),
       telefono: this.telefono.value,
     };

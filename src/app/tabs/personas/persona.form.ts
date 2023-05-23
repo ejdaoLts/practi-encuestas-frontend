@@ -7,7 +7,7 @@ export class PersonaForm extends FormGroup {
     super({
       tipo_documento: new FormControl(null, [required, onlyNumber]),
       numero_documento: new FormControl(null, [required, maxLength(20)]),
-      tipo: new FormControl(null, [required, onlyNumber]),
+      tipo_id: new FormControl(null, [required, onlyNumber]),
       nombre_completo: new FormControl(null, [required, maxLength(100)]),
       telefono: new FormControl(null, [required, maxLength(15)]),
       entidad_id: new FormControl(null, [required]),
@@ -20,8 +20,8 @@ export class PersonaForm extends FormGroup {
   get numero_documento(): FormControl {
     return this.get('numero_documento') as FormControl;
   }
-  get tipo(): FormControl {
-    return this.get('tipo') as FormControl;
+  get tipo_id(): FormControl {
+    return this.get('tipo_id') as FormControl;
   }
   get nombre_completo(): FormControl {
     return this.get('nombre_completo') as FormControl;
@@ -38,7 +38,7 @@ export class PersonaForm extends FormGroup {
     return {
       tipo_documento: this.tipo_documento.value,
       numero_documento: this.numero_documento.value,
-      tipo: this.tipo.value,
+      tipo_id: this.tipo_id.value,
       nombre_completo: ((this.nombre_completo.value || '') as string).toUpperCase(),
       telefono: this.telefono.value,
       entidad_id,
@@ -48,7 +48,7 @@ export class PersonaForm extends FormGroup {
   public resett() {
     this.tipo_documento.setValue(null);
     this.numero_documento.setValue(null);
-    this.tipo.setValue(null);
+    this.tipo_id.setValue(null);
     this.nombre_completo.setValue(null);
     this.telefono.setValue(null);
     this.entidad_id.setValue(null);

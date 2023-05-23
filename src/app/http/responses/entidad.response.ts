@@ -7,7 +7,7 @@ export interface EntidadResponse {
   entidad?: EntidadResponse;
   tipo_documento: number;
   numero_documento: string;
-  tipo: number;
+  tipo: { id: number; nombre: string };
   nombre_completo: string;
   representante?: UsuarioResponse;
   telefono: string;

@@ -31,7 +31,6 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   public dataSource = new MatTableDataSource<EvaluacionPendienteDto>([]);
   public evaluacionSelected?: EvaluacionPendienteDto;
   public isModalOpen = false;
-  public tiposEvaluacion = TiposEvaluacion;
 
   private _loading!: HTMLIonLoadingElement;
 
@@ -143,7 +142,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._preguntaActual--;
   }
 
-  public async clickOnFinalizarT1OrT2OrT3(tipoEvaluacion: TiposEvaluacion): Promise<void> {
+  public async clickOnFinalizar(tipoEvaluacion: TiposEvaluacion): Promise<void> {
     this._loading = await this._loadingCtrl.create({
       message: 'Calificando evaluación, por favor espere',
     });

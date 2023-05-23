@@ -50,7 +50,7 @@
 
     <div *ngIf="el.entidad">
       <ion-card-content style="padding: 0 10px">
-        <b>Empleador(a):</b> {{el.entidad.nombre_completo}}<br />
+        <b>ENTIDAD:</b> {{el.entidad.nombre_completo}}<br />
         <br />
       </ion-card-content>
     </div>
@@ -58,10 +58,9 @@
     <ion-icon
       style="font-size: 24px; margin: -15px 10px 0px 10px"
       name="add-circle-outline"
-      *ngIf="el.min_time_last_eva_valid"
       fill="clear"
       (click)="clickOnToggleGenEvaModal(true, el)"
-    >
+      ><!-- *ngIf="el.min_time_last_eva_valid" -->
       Evaluar
     </ion-icon>
   </ion-card>
@@ -83,62 +82,75 @@
     </ion-header>
 
     <ion-content class="ion-padding">
-      <ion-select label="tipo Evaluación" [formControl]="myEvalForm.tipo">
-        <!-- <ion-select-option [value]="1" *ngIf="[2].indexOf(personaSelected.tipo) >= 0">
-          MATRIZ VERIF. COND. CALIDAD DEL PROCESO
-        </ion-select-option> -->
-        <ion-select-option [value]="2" *ngIf="[3].indexOf(personaSelected.tipo) >= 0">
+      <ion-select label="tipo Eval." [formControl]="myEvalForm.tipo">
+        <ion-select-option [value]="2" *ngIf="[3].indexOf(personaSelected.tipo.id) >= 0">
           EVAL. ESTUDIANTE
         </ion-select-option>
-        <ion-select-option [value]="3" *ngIf="[2].indexOf(personaSelected.tipo) >= 0">
+        <ion-select-option [value]="3" *ngIf="[2].indexOf(personaSelected.tipo.id) >= 0">
           EVAL. DOCENTE
         </ion-select-option>
-        <ion-select-option [value]="4" *ngIf="[2].indexOf(personaSelected.tipo) >= 0">
+        <ion-select-option [value]="4" *ngIf="[2].indexOf(personaSelected.tipo.id) >= 0">
           AUTO-EVAL. DOCENTE
         </ion-select-option>
-        <ion-select-option [value]="5" *ngIf="[4].indexOf(personaSelected.tipo) >= 0">
-          EVAL. DOCENTE POR COORD. PRACT.
+        <ion-select-option [value]="5" *ngIf="[4].indexOf(personaSelected.tipo.id) >= 0">
+          EVAL. DOC. POR COORD. PRACT.
         </ion-select-option>
-        <ion-select-option [value]="6" *ngIf="[3].indexOf(personaSelected.tipo) >= 0">
+        <ion-select-option [value]="6" *ngIf="[3].indexOf(personaSelected.tipo.id) >= 0">
           EVAL. DOCENTE POR ESTUDIANTE
         </ion-select-option>
-        <ion-select-option [value]="7" *ngIf="[5].indexOf(personaSelected.tipo) >= 0">
+        <ion-select-option [value]="7" *ngIf="[5].indexOf(personaSelected.tipo.id) >= 0">
           EVAL. JEFE DE SERVICIO
         </ion-select-option>
-        <ion-select-option [value]="8" *ngIf="[6].indexOf(personaSelected.tipo) >= 0">
+        <ion-select-option [value]="8" *ngIf="[6].indexOf(personaSelected.tipo.id) >= 0">
           EVAL. USUARIOS
         </ion-select-option>
       </ion-select>
 
-      <ion-select label="Periodo academico" [formControl]="myEvalForm.periodo_academico">
+      <ion-select
+        label="Periodo academico"
+        *ngIf="[1,2,3,4,5,6,7].indexOf(myEvalForm.tipo.value) >= 0"
+        [formControl]="myEvalForm.periodo_academico"
+      >
         <ion-select-option [value]="1">1</ion-select-option>
         <ion-select-option [value]="2">2</ion-select-option>
       </ion-select>
 
-      <ion-input
+      <ion-select
+        [formControl]="myEvalForm.programa_academico"
+        *ngIf="[1,2,3,4,5,6,7].indexOf(myEvalForm.tipo.value) >= 0"
+        interface="action-sheet"
         label="Programa academico"
-        [formControl]="myEvalForm.programa_academico_nom"
-      ></ion-input>
+      >
+        <ion-select-option [value]="1">INST. QUIRURGICA</ion-select-option>
+        <ion-select-option [value]="2">ENFERMERIA</ion-select-option>
+        <ion-select-option [value]="3">MEDICINA</ion-select-option>
+        <ion-select-option [value]="4">PSICOLOGIA</ion-select-option>
+      </ion-select>
 
       <ion-input
         label="Estudiantes a cargo"
         [formControl]="myEvalForm.estudiantes_acargo"
-        *ngIf="[2].indexOf(personaSelected.tipo) >= 0"
+        *ngIf="[4].indexOf(myEvalForm.tipo.value) >= 0"
       ></ion-input>
 
-      <ion-input
-        label="rotacion"
-        *ngIf="[2].indexOf(personaSelected.tipo) >= 0"
+      <ion-select
         [formControl]="myEvalForm.rotacion"
-      ></ion-input>
+        *ngIf="[2,3,4].indexOf(myEvalForm.tipo.value) >= 0"
+        interface="action-sheet"
+        label="Rotación"
+      >
+        <ion-select-option [value]="1">1</ion-select-option>
+        <ion-select-option [value]="2">2</ion-select-option>
+        <ion-select-option [value]="3">3</ion-select-option>
+      </ion-select>
 
       <div style="margin: 10px 10px">
         <gcm-maestros-autocomplete-field
           [formControl]="myEvalForm.maestro_id"
           option="nombre_completo"
-          *ngIf="[3].indexOf(personaSelected.tipo) >= 0"
+          *ngIf="[2,5,6].indexOf(myEvalForm.tipo.value) >= 0"
         >
-          Profesor(a)
+          Docente
         </gcm-maestros-autocomplete-field>
       </div>
 
@@ -172,29 +184,22 @@
           <ion-select
             interface="action-sheet"
             label="Tipo de documento"
-            placeholder="Tipo de documento"
             [formControl]="myForm.tipo_documento"
           >
-            <ion-select-option value="2">Cedula de ciudadanía</ion-select-option>
-            <ion-select-option value="3">Tarjeta de identidad</ion-select-option>
+            <ion-select-option [value]="2">Cedula de ciudadanía</ion-select-option>
+            <ion-select-option [value]="3">Tarjeta de identidad</ion-select-option>
           </ion-select>
         </ion-item>
 
         <ion-item>
           <ion-input
             label="Numero de documento"
-            placeholder="Numero de documento"
             [formControl]="myForm.numero_documento"
           ></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-select
-            [formControl]="myForm.tipo"
-            interface="action-sheet"
-            label="Rol"
-            placeholder="Rol"
-          >
+          <ion-select [formControl]="myForm.tipo_id" interface="action-sheet" label="Rol">
             <ion-select-option [value]="2">DOCENTE</ion-select-option>
             <ion-select-option [value]="3">ESTUDIANTE</ion-select-option>
             <ion-select-option [value]="4">COORDINADOR PRACTICAS</ion-select-option>
@@ -204,19 +209,11 @@
         </ion-item>
 
         <ion-item>
-          <ion-input
-            [formControl]="myForm.nombre_completo"
-            label="Nombre completo"
-            placeholder="Nombre completo"
-          ></ion-input>
+          <ion-input [formControl]="myForm.nombre_completo" label="Nombre completo"></ion-input>
         </ion-item>
 
         <ion-item>
-          <ion-input
-            [formControl]="myForm.telefono"
-            label="Telefono"
-            placeholder="Telefono"
-          ></ion-input>
+          <ion-input [formControl]="myForm.telefono" label="Telefono"></ion-input>
         </ion-item>
 
         <div style="margin: 10px 10px">

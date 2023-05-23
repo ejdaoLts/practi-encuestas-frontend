@@ -7,6 +7,21 @@ export interface EvaluacionPendienteDto {
   created_at: Date;
   usuario_id: number;
   last_update: Date | null;
+  maestro: {
+    created_at: Date;
+    created_by: number;
+    entidad_id: number;
+    id: number;
+    nombre_completo: string;
+    numero_documento: string;
+    representante_id: number | null;
+    telefono: string;
+    tipo: { id: number; nombre: string };
+    tipo_documento: number;
+    tipo_id: number;
+    updated_at: Date | null;
+    updated_by: Date | null;
+  };
   finished: number;
   tipo_evaluacion: {
     id: number;
@@ -29,7 +44,11 @@ export interface EvaluacionPendienteDto {
     representante_id: number;
     tipo_documento: number;
     numero_documento: string;
-    tipo: number;
+    tipo_id: number;
+    tipo: {
+      id: number;
+      nombre: string;
+    };
     nombre_completo: string;
   };
 }

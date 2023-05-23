@@ -26,7 +26,17 @@
   >
     <ion-card-header>
       <ion-card-title>
-        {{el.entidad.nombre_completo}}
+        <div *ngIf="[5,6].indexOf(el.tipo_id) < 0">
+          {{el.entidad.nombre_completo}}
+          <br />
+          ({{el.entidad.tipo.nombre}})
+        </div>
+        <div *ngIf="[5,6].indexOf(el.tipo_id) >= 0">
+          {{el.maestro.nombre_completo}} ({{el.maestro.tipo.nombre}}) EVALUADO POR
+          {{el.entidad.nombre_completo}}
+          <br />
+          ({{el.entidad.tipo.nombre}})
+        </div>
         <span class="card-sub-in-title"> ({{el.created_at | formatDate : 4}}) </span>
       </ion-card-title>
       <ion-card-subtitle>
@@ -64,9 +74,7 @@
       class="ion-padding"
       [style]="'max-height: ' +(tipoEvaluacionActual === 1 ? 150 : 250) +'px'"
     >
-      <div
-        *ngIf="[tiposEvaluacion.T1, tiposEvaluacion.T2, tiposEvaluacion.T3].indexOf(tipoEvaluacionActual) >= 0"
-      >
+      <div *ngIf="[1,2,3,4,5,6,7,8].indexOf(tipoEvaluacionActual) >= 0">
         <div class="eva1-grupo">
           <b>CONDICIÓN DE CALIDAD:</b><br />{{pt1.grupo.orden}} - {{pt1.grupo.descripcion}}
         </div>
@@ -79,10 +87,7 @@
       </div>
     </ion-content>
 
-    <ion-content
-      class="ion-padding"
-      *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0"
-    >
+    <ion-content class="ion-padding" *ngIf="[1 ].indexOf(tipoEvaluacionActual) >= 0">
       <ion-checkbox
         labelPlacement="end"
         [checked]="pt1.inspeccionVisual"
@@ -131,7 +136,7 @@
       </ion-item>
     </ion-content>
 
-    <ion-footer *ngIf="[tiposEvaluacion.T1 ].indexOf(tipoEvaluacionActual) >= 0">
+    <ion-footer *ngIf="[1].indexOf(tipoEvaluacionActual) >= 0">
       <ion-toolbar>
         <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
           Anterior
@@ -148,7 +153,7 @@
 
         <ion-button
           *ngIf="preguntaActual === evaT1.length - 1"
-          (click)="clickOnFinalizarT1OrT2OrT3(1)"
+          (click)="clickOnFinalizar(1)"
           slot="end"
           color="success"
           [disabled]="!pt1.valoracionCondicion"
@@ -160,13 +165,10 @@
 
     <!--------------------------------------------------------------------------------------->
     <!--------------------------------------------------------------------------------------->
-    <!--------------------------------- EVA 2  O EVA 3 -------------------------------------->
+    <!------------------------------ EVA 2/3/4/5/6/7/8 -------------------------------------->
     <!--------------------------------------------------------------------------------------->
     <!--------------------------------------------------------------------------------------->
-    <ion-content
-      class="ion-padding"
-      *ngIf="[tiposEvaluacion.T2, tiposEvaluacion.T3 ].indexOf(tipoEvaluacionActual) >= 0"
-    >
+    <ion-content class="ion-padding" *ngIf="[2,3,4,5,6,7,8 ].indexOf(tipoEvaluacionActual) >= 0">
       <ion-radio-group
         [allowEmptySelection]="true"
         value="valoracion"
@@ -177,13 +179,11 @@
         <ion-radio [value]="3">Ni de Acuerdo ni en desacuerdo</ion-radio><br />
         <ion-radio [value]="2">En desacuerdo</ion-radio><br />
         <ion-radio [value]="1">Totalmente en desacuerdo</ion-radio><br />
-        <ion-radio [value]="null">No aplica</ion-radio><br />
+        <!-- <ion-radio [value]="null">No aplica</ion-radio><br /> -->
       </ion-radio-group>
     </ion-content>
 
-    <ion-footer
-      *ngIf="[tiposEvaluacion.T2, tiposEvaluacion.T3 ].indexOf(tipoEvaluacionActual) >= 0"
-    >
+    <ion-footer *ngIf="[2,3,4,5,6,7,8 ].indexOf(tipoEvaluacionActual) >= 0">
       <ion-toolbar>
         <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
           Anterior
@@ -200,7 +200,7 @@
 
         <ion-button
           *ngIf="preguntaActual === evaT1.length - 1"
-          (click)="clickOnFinalizarT1OrT2OrT3(tipoEvaluacionActual)"
+          (click)="clickOnFinalizar(tipoEvaluacionActual)"
           slot="end"
           color="success"
           [disabled]="!pt2.gradoAcuerdo"

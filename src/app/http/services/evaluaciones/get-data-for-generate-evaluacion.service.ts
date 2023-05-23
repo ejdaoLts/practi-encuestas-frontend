@@ -4,7 +4,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { PuntoEvaluacionT1 } from '@http/dtos/evaluaciones';
 import { EvaluacionDataT1Response } from '@http/responses';
-import { TiposEvaluacion } from '@http/constants';
+import { TiposEvaluacion as TIPEVA } from '@http/constants';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
 import { PuntoEvaluacionT2 } from '@http/dtos/evaluaciones';
@@ -16,12 +16,17 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
   private _dataForEvaluacionTipo1!: PuntoEvaluacionT1[];
   private _dataForEvaluacionTipo2!: PuntoEvaluacionT2[];
   private _dataForEvaluacionTipo3!: PuntoEvaluacionT2[];
+  private _dataForEvaluacionTipo4!: PuntoEvaluacionT2[];
+  private _dataForEvaluacionTipo5!: PuntoEvaluacionT2[];
+  private _dataForEvaluacionTipo6!: PuntoEvaluacionT2[];
+  private _dataForEvaluacionTipo7!: PuntoEvaluacionT2[];
+  private _dataForEvaluacionTipo8!: PuntoEvaluacionT2[];
 
-  public async execute(tipo: TiposEvaluacion): Promise<Result1> {
+  public async execute(tipo: TIPEVA): Promise<Result1> {
     try {
       let result: any;
 
-      if (tipo === TiposEvaluacion.T1) {
+      if (tipo === TIPEVA.T1) {
         if (!this._dataForEvaluacionTipo1) {
           result = await this._getEvaTipo1();
           this._dataForEvaluacionTipo1 = result;
@@ -30,21 +35,61 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
         }
       }
 
-      if ([TiposEvaluacion.T2].indexOf(tipo) >= 0) {
+      if ([TIPEVA.T2].indexOf(tipo) >= 0) {
         if (!this._dataForEvaluacionTipo2) {
-          result = await this._getEvaTipo2Or3(tipo);
+          result = await this._getEvaTipos(tipo);
           this._dataForEvaluacionTipo2 = result;
         } else {
           result = this._dataForEvaluacionTipo2;
         }
       }
 
-      if ([TiposEvaluacion.T3].indexOf(tipo) >= 0) {
+      if ([TIPEVA.T3].indexOf(tipo) >= 0) {
         if (!this._dataForEvaluacionTipo3) {
-          result = await this._getEvaTipo2Or3(tipo);
+          result = await this._getEvaTipos(tipo);
           this._dataForEvaluacionTipo3 = result;
         } else {
           result = this._dataForEvaluacionTipo3;
+        }
+      }
+      if ([TIPEVA.T4].indexOf(tipo) >= 0) {
+        if (!this._dataForEvaluacionTipo4) {
+          result = await this._getEvaTipos(tipo);
+          this._dataForEvaluacionTipo4 = result;
+        } else {
+          result = this._dataForEvaluacionTipo4;
+        }
+      }
+      if ([TIPEVA.T5].indexOf(tipo) >= 0) {
+        if (!this._dataForEvaluacionTipo5) {
+          result = await this._getEvaTipos(tipo);
+          this._dataForEvaluacionTipo5 = result;
+        } else {
+          result = this._dataForEvaluacionTipo5;
+        }
+      }
+      if ([TIPEVA.T6].indexOf(tipo) >= 0) {
+        if (!this._dataForEvaluacionTipo6) {
+          result = await this._getEvaTipos(tipo);
+          this._dataForEvaluacionTipo6 = result;
+        } else {
+          result = this._dataForEvaluacionTipo6;
+        }
+      }
+      if ([TIPEVA.T7].indexOf(tipo) >= 0) {
+        if (!this._dataForEvaluacionTipo7) {
+          result = await this._getEvaTipos(tipo);
+          this._dataForEvaluacionTipo7 = result;
+        } else {
+          result = this._dataForEvaluacionTipo7;
+        }
+      }
+      if ([TIPEVA.T8].indexOf(tipo) >= 0) {
+        if (!this._dataForEvaluacionTipo8) {
+          result = await this._getEvaTipos(tipo);
+          this._dataForEvaluacionTipo8 = result;
+        } else {
+          result = this._dataForEvaluacionTipo8;
         }
       }
 
@@ -62,7 +107,7 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     );
   }
 
-  private _getEvaTipo2Or3(tipo: TiposEvaluacion): Promise<PuntoEvaluacionT2[]> {
+  private _getEvaTipos(tipo: TIPEVA): Promise<PuntoEvaluacionT2[]> {
     return firstValueFrom(
       this._http
         .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/${tipo}`)
