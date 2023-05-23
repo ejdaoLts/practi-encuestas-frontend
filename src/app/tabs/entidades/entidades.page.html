@@ -54,7 +54,7 @@
 
     <div *ngIf="el.entidad">
       <ion-card-content style="padding: 0 10px">
-        <b>Empleador(a):</b> {{el.entidad.nombre_completo}}<br />
+        <b>Entidad:</b> {{el.entidad.nombre_completo}}<br />
         <!--  <b *ngIf=" el.representante.numero_telefono">
           (tel. {{ el.representante.numero_telefono}})
         </b> -->
@@ -70,7 +70,7 @@
       >
         <ion-select-option [value]="1" *ngIf="[1].indexOf(el.tipo) >= 0">
           MATRIZ VERIF. COND. CALIDAD DEL PROCESO
-        </ion-select-option> 
+        </ion-select-option>
       </ion-select>
     </div> -->
   </ion-card>
@@ -89,21 +89,6 @@
 
     <ion-content>
       <ion-list>
-        <!--
-        <ion-item>
-          <ion-select
-            interface="action-sheet"
-            label="Tipo de documento"
-            placeholder="Tipo de documento"
-            [formControl]="myForm.tipo_documento"
-          >
-            <ion-select-option value="1">NIT</ion-select-option>
-            <ion-select-option value="2">Cedula de ciudadanía</ion-select-option>
-            <ion-select-option value="3">Tarjeta de identidad</ion-select-option>
-          </ion-select>
-        </ion-item>
-      -->
-
         <ion-item>
           <ion-input
             label="Numero de documento"
@@ -111,19 +96,6 @@
             [formControl]="myForm.numero_documento"
           ></ion-input>
         </ion-item>
-
-        <!--   <ion-item>
-          <ion-select
-            [formControl]="myForm.tipo"
-            interface="action-sheet"
-            label="Tipo entidad"
-            placeholder="Tipo entidad"
-          >
-            <ion-select-option value="1">EMPLEADOR(A)</ion-select-option>
-            <ion-select-option value="2">MAESTRO</ion-select-option>
-            <ion-select-option value="3">ESTUDIANTE</ion-select-option>
-          </ion-select>
-        </ion-item> -->
 
         <ion-item>
           <ion-input

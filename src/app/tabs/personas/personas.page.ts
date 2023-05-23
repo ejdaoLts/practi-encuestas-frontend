@@ -145,11 +145,10 @@ export class PersonasPage implements OnInit, OnDestroy {
   private async _fetchEntidades(refresh = false) {
     await this._showLoading();
 
-    const result = await this._personasCrud.fetch([2, 3], refresh);
+    const result = await this._personasCrud.fetch([2, 3, 4, 5, 6], refresh);
 
     result.fold({
       right: _ => {
-        //console.log(_);
         this._instanceDataSource(_);
       },
     });
