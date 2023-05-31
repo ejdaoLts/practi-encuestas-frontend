@@ -16,3 +16,8 @@ export interface PuntoEvaluacionT1 {
   valoracionCondicion: ValoracionesEvaluacionT1 | null;
   observaciones: string | null;
 }
+
+export interface DataForEvaT1 {
+  puntos: PuntoEvaluacionT1[];
+  puntosLibres: any[];
+}

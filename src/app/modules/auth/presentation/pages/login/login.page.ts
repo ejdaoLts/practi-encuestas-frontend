@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { AuthenticateUserController } from '../../controllers';
 import { STORAGE_KEYS } from '@shared/constants';
 import { LoginForm } from './login.form';
 import { Router } from '@angular/router';
-
+import { GcmToastService } from '@eklipse/components/toast';
+import { AuthenticateUserController } from '@auth/presentation/controllers';
 @Component({
   selector: 'gcm-login',
   templateUrl: './login.page.html',
@@ -18,6 +18,7 @@ export class LoginPage {
   constructor(
     private _auth: AuthenticateUserController,
     private _router: Router,
+    private _toast: GcmToastService,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -30,12 +31,12 @@ export class LoginPage {
 
       result.fold({
         right: response => {
-          localStorage.setItem(STORAGE_KEYS.authToken, response.token!);
-
-          this._router.navigate(['home/personas']);
-        },
-        left: () => {
-          //this._toast.simpleNotification('Usuario y/o contraseña incorrectas');
+          if (response.token.includes('Invalid credentials')) {
+            this._toast.simpleNotification('Usuario y/o contraseña incorrectas');
+          } else {
+            localStorage.setItem(STORAGE_KEYS.authToken, response.token!);
+            this._router.navigate(['home/personas']);
+          }
         },
       });
 

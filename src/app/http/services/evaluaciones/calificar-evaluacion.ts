@@ -4,8 +4,10 @@ import { firstValueFrom } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import {
   EvaluacionPendienteDto,
+  PreguntaLibreT2,
   PuntoEvaluacionT1,
   PuntoEvaluacionT2,
+  RespuestaLibreT2,
 } from '@http/dtos/evaluaciones';
 import { TiposEvaluacion } from '@http/constants';
 import { END_POINTS } from '@shared/constants';
@@ -19,14 +21,15 @@ export class CalificarEvaluacionService extends BaseHttp {
   public async execute(
     tipo: TiposEvaluacion,
     evaluacion: EvaluacionPendienteDto,
-    data: any
+    data: any,
+    puntosLibres?: RespuestaLibreT2[]
   ): Promise<Result1> {
     try {
       let result: any;
 
       if (tipo === TiposEvaluacion.T1) result = await this._calificarEvalT1(data, evaluacion);
       if ([2, 3, 4, 5, 6, 7, 8].indexOf(tipo) >= 0) {
-        result = await this._califiEvalT2OrT3(data, evaluacion, tipo);
+        result = await this._califiEvalT2OrT3(data, puntosLibres!, evaluacion, tipo);
       }
 
       return Either.right(cloneDeep(result));
@@ -59,6 +62,7 @@ export class CalificarEvaluacionService extends BaseHttp {
 
   private _califiEvalT2OrT3(
     puntosEvaluados: PuntoEvaluacionT2[],
+    puntosLibres: RespuestaLibreT2[],
     evaluacion: EvaluacionPendienteDto,
     tipo: TiposEvaluacion
   ): Promise<any[]> {
@@ -71,7 +75,10 @@ export class CalificarEvaluacionService extends BaseHttp {
     });
 
     return firstValueFrom(
-      this._http.post<any[]>(`${END_POINTS.V1.EVALUACIONES}/t${tipo}/calificar`, payload)
+      this._http.post<any[]>(`${END_POINTS.V1.EVALUACIONES}/t${tipo}/calificar`, [
+        payload,
+        puntosLibres,
+      ])
     );
   }
 }

@@ -53,6 +53,9 @@
   <ng-template>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start" *ngIf="tipoEvaluacionActual !== 1">
+          <ion-button (click)="clickOnPregLibresToggleModal(true)">Preg. Libres</ion-button>
+        </ion-buttons>
         <ion-title>{{preguntaActual + 1}} de {{evaT1.length}}</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="clickOnToggleModal(false)">Cerrar</ion-button>
@@ -179,11 +182,12 @@
         <ion-radio [value]="3">Ni de Acuerdo ni en desacuerdo</ion-radio><br />
         <ion-radio [value]="2">En desacuerdo</ion-radio><br />
         <ion-radio [value]="1">Totalmente en desacuerdo</ion-radio><br />
+        <ion-radio [value]="null">No aplica</ion-radio><br />
         <!-- <ion-radio [value]="null">No aplica</ion-radio><br /> -->
       </ion-radio-group>
     </ion-content>
 
-    <ion-footer *ngIf="[2,3,4,5,6,7,8 ].indexOf(tipoEvaluacionActual) >= 0">
+    <ion-footer *ngIf="[2,3,4,5,6,7,8].indexOf(tipoEvaluacionActual) >= 0">
       <ion-toolbar>
         <ion-button *ngIf="preguntaActual !== 0" (click)="clickOnAnteriorPregunta()" slot="start">
           Anterior
@@ -209,5 +213,37 @@
         </ion-button>
       </ion-toolbar>
     </ion-footer>
+  </ng-template>
+</ion-modal>
+
+<ion-modal [isOpen]="isModalPrLibresOpen" [backdropDismiss]="false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Preguntas Libres</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="clickOnPregLibresToggleModal(false)">Listo</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <div *ngFor="let i of dataForPreguntasLibres; let id = index">
+        <ion-item>
+          <span>{{i.pregunta}}</span>
+        </ion-item>
+
+        <ion-item>
+          <ion-textarea
+            labelPlacement="floating"
+            fill="outline"
+            placeholder="Respuesta (opcional)"
+            [(ngModel)]="i.respuesta"
+          ></ion-textarea>
+        </ion-item>
+      </div>
+    </ion-content>
+
+    <ion-footer> </ion-footer>
   </ng-template>
 </ion-modal>

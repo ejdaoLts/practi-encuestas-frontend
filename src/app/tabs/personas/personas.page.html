@@ -156,7 +156,7 @@
 
       <div style="text-align: center">
         <ion-button [disabled]="myEvalForm.invalid" (click)="clickOnEvaluar(personaSelected)">
-          REGISTRAR
+          GENERAR EVALUACIÓN
         </ion-button>
       </div>
     </ion-content>
@@ -217,9 +217,17 @@
         </ion-item>
 
         <div style="margin: 10px 10px">
-          <gcm-autocomplete-field [formControl]="myForm.entidad_id" option="nombre_completo">
+          <!-- <gcm-autocomplete-field [formControl]="myForm.entidad_id" option="nombre_completo">
             Entidad
-          </gcm-autocomplete-field>
+          </gcm-autocomplete-field> -->
+
+          <gcm-select-field
+            appearance="standard"
+            [formControl]="myForm.entidad_id"
+            [suggestions]="entidadesSuggestions"
+          >
+            Entidad
+          </gcm-select-field>
         </div>
       </ion-list>
 

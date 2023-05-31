@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { Either } from '@eklipse/utilities';
 import { firstValueFrom, map } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
-import { PuntoEvaluacionT1 } from '@http/dtos/evaluaciones';
+import { DataForEvaT1, DataForEvaT2, PuntoEvaluacionT1 } from '@http/dtos/evaluaciones';
 import { EvaluacionDataT1Response } from '@http/responses';
 import { TiposEvaluacion as TIPEVA } from '@http/constants';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
 import { PuntoEvaluacionT2 } from '@http/dtos/evaluaciones';
 
-type Result1 = Either<boolean, PuntoEvaluacionT1[]>;
+type Result1 = Either<boolean, DataForEvaT2>;
 
 @Injectable({ providedIn: 'root' })
 export class GetDataForGenerateEvaluacionService extends BaseHttp {
@@ -99,7 +99,7 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     }
   }
 
-  private _getEvaTipo1(): Promise<PuntoEvaluacionT1[]> {
+  private _getEvaTipo1(): Promise<DataForEvaT1> {
     return firstValueFrom(
       this._http
         .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/1`)
@@ -107,19 +107,21 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     );
   }
 
-  private _getEvaTipos(tipo: TIPEVA): Promise<PuntoEvaluacionT2[]> {
+  private _getEvaTipos(tipo: TIPEVA): Promise<DataForEvaT2> {
     return firstValueFrom(
       this._http
-        .get<EvaluacionDataT1Response[]>(`${END_POINTS.V1.EVALUACIONES}/data/${tipo}`)
+        .get<any[]>(`${END_POINTS.V1.EVALUACIONES}/data/${tipo}`)
         .pipe(map(_ => this._mapEvaTipo2(_)))
     );
   }
 
-  private _mapEvaTipo1(_: EvaluacionDataT1Response[]): PuntoEvaluacionT1[] {
+  private _mapEvaTipo1(_: any[]): DataForEvaT1 {
     const puntos: PuntoEvaluacionT1[] = [];
     let i = 1;
 
-    const grupos = orderBy(_, 'orden', 'asc');
+    const grupos: EvaluacionDataT1Response[] = orderBy(_[0], 'orden', 'asc');
+
+    console.log(grupos);
 
     grupos.forEach(grupo => {
       const ramdon = false;
@@ -152,14 +154,18 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
       });
     });
 
-    return orderBy(puntos, 'orden', 'asc');
+    const data = { puntos: orderBy(puntos, 'orden', 'asc'), puntosLibres: [] };
+
+    console.log(data);
+
+    return data;
   }
 
-  private _mapEvaTipo2(_: EvaluacionDataT1Response[]): PuntoEvaluacionT2[] {
+  private _mapEvaTipo2(_: any[]): DataForEvaT2 {
     const puntos: PuntoEvaluacionT2[] = [];
     let i = 1;
 
-    const grupos = orderBy(_, 'orden', 'asc');
+    const grupos: EvaluacionDataT1Response[] = orderBy(_[0], 'orden', 'asc');
 
     grupos.forEach(grupo => {
       grupo.aspectos_evaluacion.forEach(aspecto => {
@@ -179,7 +185,7 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
       });
     });
 
-    return orderBy(puntos, 'orden', 'asc');
+    return { puntos: orderBy(puntos, 'orden', 'asc'), puntosLibres: _[1] };
   }
 
   private getRandom(min = 1, max = 4) {

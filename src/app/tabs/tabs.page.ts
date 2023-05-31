@@ -31,7 +31,7 @@ export class TabsPage {
       role: 'confirm',
       handler: () => {
         localStorage.clear();
-        this._router.navigate(['access-control/login']);
+        location.reload();
         this.tabName = 'Home';
       },
     },

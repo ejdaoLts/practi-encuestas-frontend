@@ -17,7 +17,7 @@ import { PipesModule } from '@shared/pipes';
 import { GcmAutocompleteField } from './autocomplete-field';
 import { EvaluacionForm } from './evaluacion.form';
 import { GcmMaestrosAutocompleteField } from './maestros-autocomplete';
-
+import { GcmFieldsModule } from '@eklipse/components/fields';
 @Component({
   standalone: true,
   imports: [
@@ -26,6 +26,7 @@ import { GcmMaestrosAutocompleteField } from './maestros-autocomplete';
     FormsModule,
     GcmAutocompleteField,
     GcmMaestrosAutocompleteField,
+    GcmFieldsModule,
     ReactiveFormsModule,
     PipesModule,
   ],
@@ -44,6 +45,11 @@ export class PersonasPage implements OnInit, OnDestroy {
   public isModalGenEvaOpen = false;
 
   public personaSelected!: EntidadResponse;
+
+  public entidadesSuggestions = [
+    { value: 1, option: 'CLINICA ERASMOS' },
+    { value: 2, option: 'CLINICA SANTO TOMAS' },
+  ];
 
   customForm = new FormControl();
 
@@ -88,13 +94,66 @@ export class PersonasPage implements OnInit, OnDestroy {
     }
   }
 
-  /*   public async clickOnGenerarEvaluacion(entidad: EntidadResponse) {
-    console.log(entidad);
-    console.log(this.myEvalForm.value);
-    //this.isModalGenEvaOpen = true;
-  } */
-
   public async clickOnEvaluar(entidad: EntidadResponse) {
+    if (this.myEvalForm.evaluacionValida) {
+      const alert = await this._alertController.create({
+        header: 'Segur@',
+        message: 'Desea crear esta evaluación?',
+        buttons: [
+          {
+            text: 'OK',
+            role: 'confirm',
+            handler: async () => {
+              await this._showLoading('Creando nueva evaluación...');
+
+              const result = await this._personasCrud.evaluar(entidad, this.myEvalForm.model);
+
+              result.fold({
+                right: async () => {
+                  const alert = await this._alertController.create({
+                    header: 'Estado de la evaluación',
+                    message: 'Evaluación creada satisfactoriamente',
+                    buttons: ['OK'],
+                  });
+
+                  this.isModalGenEvaOpen = false;
+                  this.myEvalForm.resett();
+                  this._cd.markForCheck();
+                  await alert.present();
+                },
+                left: async message => {
+                  const alert = await this._alertController.create({
+                    header: 'Estado de la evaluación',
+                    message,
+                    buttons: ['OK'],
+                  });
+
+                  await alert.present();
+                },
+              });
+
+              this._removeLoading();
+            },
+          },
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+          },
+        ],
+      });
+
+      await alert.present();
+
+      //alert.onDidDismiss(_)
+    } else {
+      const alert = await this._alertController.create({
+        header: 'Estado de la evaluación',
+        message: 'Uno o mas campos no son validos',
+        buttons: ['OK'],
+      });
+      await alert.present();
+    }
+    /*
     await this._showLoading('Creando nueva evaluación...');
 
     const result = await this._personasCrud.evaluar(entidad, this.myEvalForm.model);
@@ -108,6 +167,8 @@ export class PersonasPage implements OnInit, OnDestroy {
         });
 
         this.isModalGenEvaOpen = false;
+        this.myEvalForm.resett();
+        this._cd.markForCheck();
         await alert.present();
       },
       left: async () => {
@@ -121,7 +182,7 @@ export class PersonasPage implements OnInit, OnDestroy {
       },
     });
 
-    this._removeLoading();
+    this._removeLoading(); */
   }
 
   public async clickOnRegistrarEntidad() {
@@ -134,6 +195,8 @@ export class PersonasPage implements OnInit, OnDestroy {
         this._removeLoading();
 
         this.isModalOpen = false;
+
+        this._cd.markForCheck();
         this.myForm.resett();
       },
       left: _ => {

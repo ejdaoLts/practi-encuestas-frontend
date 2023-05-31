@@ -34,7 +34,9 @@ export class PersonaForm extends FormGroup {
   }
 
   public get model(): CreateEntidadPayload {
-    const entidad_id = this.entidad_id.value ? this.entidad_id.value.id : null;
+    //const entidad_id = this.entidad_id.value ? this.entidad_id.value.id : null;
+    const entidad_id = this.entidad_id.value ? this.entidad_id.value.value : null;
+    const entidad_nombre_completo = this.entidad_id.value ? this.entidad_id.value.option : null;
     return {
       tipo_documento: this.tipo_documento.value,
       numero_documento: this.numero_documento.value,
@@ -42,15 +44,17 @@ export class PersonaForm extends FormGroup {
       nombre_completo: ((this.nombre_completo.value || '') as string).toUpperCase(),
       telefono: this.telefono.value,
       entidad_id,
+      entidad_nombre_completo,
     };
   }
 
   public resett() {
-    this.tipo_documento.setValue(null);
+    this.reset();
+    /*     this.tipo_documento.setValue(null);
     this.numero_documento.setValue(null);
     this.tipo_id.setValue(null);
     this.nombre_completo.setValue(null);
     this.telefono.setValue(null);
-    this.entidad_id.setValue(null);
+    this.entidad_id.setValue(null); */
   }
 }

@@ -9,7 +9,12 @@ import { AlertController, IonicModule, LoadingController } from '@ionic/angular'
 import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { PipesModule } from '@shared/pipes';
-import { EvaluacionPendienteDto, PuntoEvaluacionT1, PuntoEvaluacionT2 } from '@http/dtos';
+import {
+  EvaluacionPendienteDto,
+  PuntoEvaluacionT1,
+  PuntoEvaluacionT2,
+  RespuestaLibreT2,
+} from '@http/dtos';
 import {
   CalificarEvaluacionService,
   GetDataForGenerateEvaluacionService,
@@ -31,10 +36,13 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   public dataSource = new MatTableDataSource<EvaluacionPendienteDto>([]);
   public evaluacionSelected?: EvaluacionPendienteDto;
   public isModalOpen = false;
+  public isModalPrLibresOpen = false;
 
   private _loading!: HTMLIonLoadingElement;
 
   private _dataForTipoEvaluacion: any;
+
+  public dataForPreguntasLibres: any;
 
   private _preguntaActual = 0;
   private _tipoEvaluacionActual = TiposEvaluacion.T1;
@@ -64,6 +72,11 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._fetchEvaluacionesPendientes();
   }
 
+  public clickOnPregLibresToggleModal(open: boolean) {
+    if (open) this.isModalPrLibresOpen = true;
+    else this.isModalPrLibresOpen = false;
+  }
+
   public async clickOnToggleModal(
     open: boolean,
     evaluacion?: EvaluacionPendienteDto
@@ -72,11 +85,13 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       await this._showLoading('Obteniendo información para generar evaluación...');
       this.evaluacionSelected = evaluacion;
       this._tipoEvaluacionActual = evaluacion.tipo_evaluacion.id;
+
       const result = await this._getDataForGenerateEvaluacion.execute(evaluacion.tipo_id);
 
       result.fold({
         right: _ => {
-          this._dataForTipoEvaluacion = _;
+          this._dataForTipoEvaluacion = _.puntos;
+          this.dataForPreguntasLibres = _.puntosLibres;
           this._removeLoading();
         },
       });
@@ -149,10 +164,23 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._loading.present();
     this._cd.markForCheck();
 
+    const puntosLibres: RespuestaLibreT2[] | undefined =
+      tipoEvaluacion !== 1
+        ? this.dataForPreguntasLibres.map((_: any) => {
+            return {
+              eva_id: this.evaluacionSelected!.id,
+              preg_libre_id: _.id,
+              respuesta: _.respuesta || null,
+            };
+          })
+        : undefined;
+
+    this.clickOnToggleModal(false);
     const res = await this._calificarEvaluacion.execute(
       tipoEvaluacion,
       this.evaluacionSelected!,
-      this._dataForTipoEvaluacion
+      this._dataForTipoEvaluacion,
+      puntosLibres
     );
 
     this._loading.remove();

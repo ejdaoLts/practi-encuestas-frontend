@@ -8,7 +8,7 @@ import { CreateEntidadPayload, CreateEvaluacionPayload } from '@http/payloads';
 
 type Result1 = Either<boolean, EntidadResponse[]>;
 type Result2 = Either<boolean, EntidadResponse>;
-type Result3 = Either<boolean, any>;
+type Result3 = Either<string, any>;
 type Result4 = Either<boolean, { id: number; nombre_completo: string }[]>;
 
 @Injectable({ providedIn: 'root' })
@@ -31,8 +31,8 @@ export class PersonasCrudService extends BaseHttp {
       const result = await this._evaluar(entidad, data);
 
       return Either.right(result);
-    } catch (error) {
-      return Either.left(false);
+    } catch (error: any) {
+      return Either.left(error.error.message);
     }
   }
 
@@ -42,6 +42,7 @@ export class PersonasCrudService extends BaseHttp {
 
       return Either.right(result);
     } catch (error) {
+      console.log(error);
       return Either.left(false);
     }
   }
@@ -65,6 +66,11 @@ export class PersonasCrudService extends BaseHttp {
       this._http.post<EntidadResponse>(`${END_POINTS.V1.ENTIDADES}`, payload).pipe(
         tap(entidad => {
           entidad.min_time_last_eva_valid = true;
+          entidad.tipo = { id: payload.tipo_id, nombre: entidad.nombre_tipo_entidad };
+          entidad.entidad = {
+            id: payload.entidad_id!,
+            nombre_completo: payload.entidad_nombre_completo!,
+          } as any;
           this._entidades.value.unshift(entidad);
           this._entidades.next(this._entidades.value);
         })
@@ -78,7 +84,6 @@ export class PersonasCrudService extends BaseHttp {
   ): Promise<any> {
     evaluacion.entidad_id = entidad.id;
 
-    console.log(evaluacion);
     return firstValueFrom(
       this._http.post<any>(`${END_POINTS.V1.EVALUACIONES}`, evaluacion).pipe(
         tap((result: any) => {
