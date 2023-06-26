@@ -158,56 +158,75 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   }
 
   public async clickOnFinalizar(tipoEvaluacion: TiposEvaluacion): Promise<void> {
-    this._loading = await this._loadingCtrl.create({
-      message: 'Calificando evaluación, por favor espere',
-    });
-    this._loading.present();
-    this._cd.markForCheck();
-
-    const puntosLibres: RespuestaLibreT2[] | undefined =
-      tipoEvaluacion !== 1
-        ? this.dataForPreguntasLibres.map((_: any) => {
-            return {
-              eva_id: this.evaluacionSelected!.id,
-              preg_libre_id: _.id,
-              respuesta: _.respuesta || null,
-            };
-          })
-        : undefined;
-
-    this.clickOnToggleModal(false);
-    const res = await this._calificarEvaluacion.execute(
-      tipoEvaluacion,
-      this.evaluacionSelected!,
-      this._dataForTipoEvaluacion,
-      puntosLibres
-    );
-
-    this._loading.remove();
-    this._cd.markForCheck();
-
-    let message = '';
-
-    res.fold({
-      right: () => {
-        message = 'Evaluación calificada exitosamente';
-      },
-      left: () => {
-        message = 'La evaluación no ha podido ser calificada, intentelo nuevamente';
-      },
-    });
-
     const alert = await this._alertController.create({
-      header: 'Estado de la evaluación',
-      message,
-      buttons: ['OK'],
+      header: 'Cerrar sesión',
+      message: '¿Está segur@ que desea cerrar la sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {},
+        },
+        {
+          text: 'OK',
+          role: 'confirm',
+          handler: async () => {
+            this._loading = await this._loadingCtrl.create({
+              message: 'Calificando evaluación, por favor espere',
+            });
+            this._loading.present();
+            this._cd.markForCheck();
+
+            const puntosLibres: RespuestaLibreT2[] | undefined =
+              tipoEvaluacion !== 1
+                ? this.dataForPreguntasLibres.map((_: any) => {
+                    return {
+                      eva_id: this.evaluacionSelected!.id,
+                      preg_libre_id: _.id,
+                      respuesta: _.respuesta || null,
+                    };
+                  })
+                : undefined;
+
+            this.clickOnToggleModal(false);
+            const res = await this._calificarEvaluacion.execute(
+              tipoEvaluacion,
+              this.evaluacionSelected!,
+              this._dataForTipoEvaluacion,
+              puntosLibres
+            );
+
+            this._loading.remove();
+            this._cd.markForCheck();
+
+            let message = '';
+
+            res.fold({
+              right: () => {
+                message = 'Evaluación calificada exitosamente';
+              },
+              left: () => {
+                message = 'La evaluación no ha podido ser calificada, intentelo nuevamente';
+              },
+            });
+
+            const alert = await this._alertController.create({
+              header: 'Estado de la evaluación',
+              message,
+              buttons: ['OK'],
+            });
+
+            await alert.present();
+
+            this.clickOnToggleModal(false);
+
+            await this._fetchEvaluacionesPendientes();
+          },
+        },
+      ],
     });
 
     await alert.present();
-
-    this.clickOnToggleModal(false);
-
-    await this._fetchEvaluacionesPendientes();
   }
 
   get pt1(): PuntoEvaluacionT1 {

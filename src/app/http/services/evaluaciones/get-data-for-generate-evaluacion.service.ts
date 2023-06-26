@@ -121,15 +121,13 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
 
     const grupos: EvaluacionDataT1Response[] = orderBy(_[0], 'orden', 'asc');
 
-    console.log(grupos);
-
     grupos.forEach(grupo => {
       const ramdon = false;
 
-      const inVis = ramdon ? this.getRandomBoolean() : false;
-      const revDoc = ramdon ? this.getRandomBoolean() : false;
-      const entAct = ramdon ? this.getRandomBoolean() : false;
-      const valCon = ramdon ? this.getRandom() : null;
+      const inVis = ramdon ? this.getRandomBoolean() : true;
+      const revDoc = ramdon ? this.getRandomBoolean() : true;
+      const entAct = ramdon ? this.getRandomBoolean() : true;
+      const valCon = ramdon ? this.getRandom() : 1;
       const obs = ramdon ? `${inVis} ${revDoc} ${entAct} ${valCon}` : null;
 
       grupo.aspectos_evaluacion.forEach(aspecto => {

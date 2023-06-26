@@ -23,6 +23,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GcmToastService } from '@eklipse/components/toast';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { AdminLayoutModule } from './app/admin-layout';
 
 if (environment.production) {
   enableProdMode();
@@ -36,6 +37,7 @@ bootstrapApplication(AppComponent, {
 
     importProvidersFrom(
       BrowserAnimationsModule,
+      AdminLayoutModule,
       MatSnackBarModule,
       IonicModule.forRoot({ mode: 'ios' }),
       HttpClientModule

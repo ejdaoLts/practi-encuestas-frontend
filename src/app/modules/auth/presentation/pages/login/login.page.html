@@ -1,25 +1,45 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Control de acceso</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="login-background-image ion-padding">
+  <section class="login-container">
+    <div class="login-content">
+      <!-- <img src="assets/images/access-control/logo.png" /> -->
 
-<ion-content [fullscreen]="true" class="background-image">
-  <ion-header collapse="condense">
-    <ion-toolbar class="background-image">
-      <ion-title size="large">Control de acceso</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <div>
+        <b>Metrik DS</b><br />
+        <span>Control de acceso</span>
+      </div>
 
-  <form [formGroup]="loginForm" (ngSubmit)="clickOnAuthenticate()">
-    <ion-input [formControl]="loginForm.username" label="Nombre del Usuario" />
+      <form [formGroup]="loginForm" (ngSubmit)="clickOnAuthenticate()">
+        <ion-item>
+          <ion-input
+            [formControl]="loginForm.username"
+            label="Nombre de Usuario"
+            label-placement="floating"
+          />
+        </ion-item>
 
-    <ion-input type="password" [formControl]="loginForm.password" label="Contraseña" />
+        <ion-item>
+          <ion-input
+            [type]="showPass ? 'text' : 'password'"
+            [formControl]="loginForm.password"
+            label-placement="floating"
+            label="Contraseña"
+          />
+          <ion-button fill="clear" (click)="showPass ? showPass = false : showPass = true">
+            <ion-icon
+              class="pass-eye-icon"
+              [name]="showPass ? 'eye-off-outline' : 'eye-outline'"
+              color="dark"
+              slot="end"
+            ></ion-icon>
+          </ion-button>
+        </ion-item>
 
-    <br />
+        <br />
 
-    <ion-button type="submit" class="bolder" [disabled]="isAuthenticating">
-      INICIAR SESIÓN
-    </ion-button>
-  </form>
+        <ion-button type="submit" class="bolder" [disabled]="isAuthenticating || !loginForm.valid">
+          INICIAR SESIÓN
+        </ion-button>
+      </form>
+    </div>
+  </section>
 </ion-content>

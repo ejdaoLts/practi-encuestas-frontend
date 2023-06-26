@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard, GuestGuard } from '@shared/guards';
 import { AccessControlComponent } from './layouts/access-control';
+import { AdminLayoutComponent } from './admin-layout';
 //import { AdminPanelComponent } from './layouts/admin-panel/admin-panel.component';
 
 export const routes: Routes = [
@@ -18,11 +19,22 @@ export const routes: Routes = [
   },
   {
     path: '',
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'home',
-        loadChildren: () => import('./tabs/tabs.routes').then(m => m.routes),
+        path: 'personas',
+        loadComponent: () => import('./modules/personas/personas.page').then(m => m.PersonasPage),
+      },
+      {
+        path: 'entidades',
+        loadComponent: () =>
+          import('./modules/entidades/entidades.page').then(m => m.EntidadesPage),
+      },
+      {
+        path: 'evaluaciones',
+        loadComponent: () =>
+          import('./modules/evaluaciones/evaluaciones.page').then(m => m.EvaluacionesPage),
       },
     ],
   },

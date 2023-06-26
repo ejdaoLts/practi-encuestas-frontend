@@ -1,0 +1,18 @@
+:root {
+  --toolbar-principal-background-color: var(--ion-color-primary);
+  --toolbar-principal-color: #ffffff;
+  --toolbar-sidebar-background-color: #ffffff;
+  --toolbar-sidebar-color: var(--ion-color-primary);
+  --sidebar-acorddion-arrow-color: rgba(0, 0, 0, 0.25);
+  --loader-overlay-backdrop-background-color: rgba(255, 255, 255, 0.3);
+  --loader-double-bounce1: #fcc02e;
+  --loader-double-bounce2: #03a9f4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --toolbar-principal-background-color: rgb(54, 57, 76);
+    --toolbar-sidebar-background-color: rgb(42, 49, 66);
+    --sidebar-acorddion-arrow-color: rgba(255, 255, 255, 0.25);
+  }
+}

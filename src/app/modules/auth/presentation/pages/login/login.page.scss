@@ -1,10 +1,35 @@
-.background-image {
-  --background: #abbaab;
-  --background: -webkit-linear-gradient(to right, #ffffff, #abbaab);
-  --background: linear-gradient(to right, #ffffff, #abbaab);
+.login-background-image {
+  --background: linear-gradient(105deg, #0aa1ae 60%, #79d5db 60%);
+}
+
+.login-container {
+  min-height: calc(100vh - 40px);
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+}
+
+.login-content {
+  & > img {
+    max-height: 150px;
+    max-width: 260px;
+  }
+  text-align: center;
+  white-space: nowrap;
+  background-color: var(--ion-custom-background);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius: 10px;
+  padding: 16px 16px;
 }
 
 form {
-  padding: 10px;
+  padding: 0 10px 10px 0;
   text-align: center;
+  margin: 20px;
+  border-radius: 8px;
+}
+
+.pass-eye-icon {
+  color: var(--ion-text-color) !important;
 }

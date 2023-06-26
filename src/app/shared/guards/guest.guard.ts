@@ -9,7 +9,7 @@ export class GuestGuard implements CanActivate {
 
   canActivate(): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (localStorage.getItem(STORAGE_KEYS.authToken) !== null) {
-      this._router.navigate(['home/personas']);
+      this._router.navigate(['personas']);
       return false;
     }
 

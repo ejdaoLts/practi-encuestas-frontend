@@ -12,6 +12,7 @@ import { AuthenticateUserController } from '@auth/presentation/controllers';
 })
 export class LoginPage {
   public loginForm = new LoginForm();
+  public showPass = false;
 
   private _isAuthenticating = false;
 
@@ -35,7 +36,8 @@ export class LoginPage {
             this._toast.simpleNotification('Usuario y/o contraseña incorrectas');
           } else {
             localStorage.setItem(STORAGE_KEYS.authToken, response.token!);
-            this._router.navigate(['home/personas']);
+            location.reload();
+            //this._router.navigate(['personas']);
           }
         },
       });
