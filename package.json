@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.html\" \"src/**/*.scss\"",
-    "dist": "http-server dist/app-frontend"
+    "dist": "http-server www"
   },
   "private": true,
   "dependencies": {

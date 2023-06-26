@@ -8,6 +8,7 @@ import { TiposEvaluacion as TIPEVA } from '@http/constants';
 import { END_POINTS } from '@shared/constants';
 import { BaseHttp } from '@shared/bases';
 import { PuntoEvaluacionT2 } from '@http/dtos/evaluaciones';
+import { gaea } from './generate-aspecto-evaluar-auto';
 
 type Result1 = Either<boolean, DataForEvaT2>;
 
@@ -122,13 +123,8 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
     const grupos: EvaluacionDataT1Response[] = orderBy(_[0], 'orden', 'asc');
 
     grupos.forEach(grupo => {
-      const ramdon = false;
-
-      const inVis = ramdon ? this.getRandomBoolean() : true;
-      const revDoc = ramdon ? this.getRandomBoolean() : true;
-      const entAct = ramdon ? this.getRandomBoolean() : true;
-      const valCon = ramdon ? this.getRandom() : 1;
-      const obs = ramdon ? `${inVis} ${revDoc} ${entAct} ${valCon}` : null;
+      const valCon = null;
+      const obs = null;
 
       grupo.aspectos_evaluacion.forEach(aspecto => {
         puntos.push({
@@ -141,9 +137,9 @@ export class GetDataForGenerateEvaluacionService extends BaseHttp {
             orden: grupo.orden,
             descripcion: grupo.descripcion,
           },
-          inspeccionVisual: inVis,
-          revisionDocumental: revDoc,
-          entrevistaActores: entAct,
+          inspeccionVisual: gaea(i as any, 'av'),
+          revisionDocumental: gaea(i as any, 'rd'),
+          entrevistaActores: gaea(i as any, 'era'),
           valoracionCondicion: valCon,
           observaciones: obs,
         });
