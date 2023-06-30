@@ -1,0 +1,49 @@
+<section mat-dialog-title>Resultado Evaluación de {{ data.nombreEvaluado }}</section>
+
+<section mat-dialog-content>
+  <div *ngFor="let i of resultados; let id = index" class="box-res">
+    <b>{{ i.key }}</b>
+    <mat-divider></mat-divider>
+
+    <div *ngFor="let r of i.rows; let rd = index" [class.mgbtn10]="rd !== i.rows.length - 1">
+      <!-- {{ rd + 1 }} - -->
+      <div>{{ r.aspecto_evaluar }}</div>
+      <div style="font-size: 12px">
+        <b>
+          {{ r.calificacion }} ({{
+            !r.calificacion
+              ? 'NO APLICA'
+              : r.calificacion === 1
+              ? 'TOTALMENTE EN DESACUERDO'
+              : r.calificacion === 2
+              ? 'EN DESACUERDO'
+              : r.calificacion === 3
+              ? 'NI DE ACUERDO NI EN DESACUERDO'
+              : r.calificacion === 4
+              ? 'DE ACUERDO'
+              : 'TOTALMENTE DE ACUERDO'
+          }})
+        </b>
+        <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
+      </div>
+    </div>
+  </div>
+
+  <div class="box-res" *ngIf="data.preguntasLibres.length">
+    <b>PREGUNTAS DE LIBRE INTERPRETACIÓN</b>
+    <mat-divider></mat-divider>
+    <div
+      *ngFor="let r of data.preguntasLibres; let rd = index"
+      [class.mgbtn10]="rd !== data.preguntasLibres.length - 1"
+    >
+      <!-- {{ rd + 1 }} - -->
+      <div>{{ r.pta }}</div>
+      <div style="font-size: 12px">
+        <b>
+          {{ r.rta }}
+        </b>
+        <mat-divider *ngIf="rd !== data.preguntasLibres.length - 1"></mat-divider>
+      </div>
+    </div>
+  </div>
+</section>

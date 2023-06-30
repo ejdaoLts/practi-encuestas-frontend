@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { AuthGuard, GuestGuard } from '@shared/guards';
 import { AccessControlComponent } from './layouts/access-control';
 import { AdminLayoutComponent } from './admin-layout';
+import { AdminPanelComponent } from './layouts/admin-panel/admin-panel.component';
+import { EvaluacionesPage } from './public/evaluaciones/evaluaciones.page';
 //import { AdminPanelComponent } from './layouts/admin-panel/admin-panel.component';
 
 export const routes: Routes = [
@@ -35,6 +37,17 @@ export const routes: Routes = [
         path: 'evaluaciones',
         loadComponent: () =>
           import('./modules/evaluaciones/evaluaciones.page').then(m => m.EvaluacionesPage),
+      },
+    ],
+  },
+  {
+    path: 'public',
+    component: AdminPanelComponent,
+    children: [
+      {
+        path: 'evaluaciones',
+        loadComponent: () =>
+          import('./public/evaluaciones/evaluaciones.page').then(m => m.EvaluacionesPage),
       },
     ],
   },

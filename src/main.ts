@@ -24,6 +24,10 @@ import { GcmToastService } from '@eklipse/components/toast';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AdminLayoutModule } from './app/admin-layout';
+import { AdminPanelModule } from './app/layouts/admin-panel/admin-panel.module';
+import { getSpanishPaginatorIntl } from '@shared/translations';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 if (environment.production) {
   enableProdMode();
@@ -38,12 +42,15 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       BrowserAnimationsModule,
       AdminLayoutModule,
+      AdminPanelModule,
       MatSnackBarModule,
       IonicModule.forRoot({ mode: 'ios' }),
       HttpClientModule
     ),
     provideRouter(routes),
     { provide: LocationStrategy, useClass: HashLocationStrategy },
+    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() },
+    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AddTokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpTimeoutInterceptor, multi: true },

@@ -1,1 +1,63 @@
-<p>admin-panel works!</p>
+<ion-menu contentId="main-content" #sidebar>
+  <ion-header>
+    <ion-toolbar class="adly__sidebar__toolbar">
+      <ion-title class="adly__sidebar__title">
+        <div>
+          <img src="assets/icon/favicon.png" />
+          <span style="margin-left: 10px">Metrik DS</span>
+        </div>
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+    <ion-accordion-group>
+      <div *ngFor="let item of navigation; let i = index">
+        <a
+          *ngIf="item.type === 'link'"
+          class="bolder adly__sidebar__link"
+          (click)="redirectTo(item.url!); sidebar.close(); tabName = item.name"
+        >
+          <ion-item>
+            <ion-label>{{ item.name }}</ion-label>
+          </ion-item>
+        </a>
+        <ion-accordion
+          value="sidenav-accordion-{{ i }}"
+          *ngIf="item.type === 'dropdown'"
+          class="adly__sidebar__accordion"
+        >
+          <ion-item slot="header" class="bolder">
+            <ion-label>{{ item.name }}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <a
+              class="adly__sidebar__link"
+              *ngFor="let link of item.dropdownLinks"
+              [routerLink]="link.urlIsNotAutoCompleted ? link.url : item.url + '/' + link.url"
+              (click)="sidebar.close(); tabName = link.name"
+            >
+              <div class="adly__sidebar__accordion-item-name">
+                {{ link.name }}
+              </div>
+            </a>
+          </div>
+        </ion-accordion>
+      </div>
+    </ion-accordion-group>
+  </ion-content>
+</ion-menu>
+<!-- CONTENT -->
+<div class="ion-page" id="main-content">
+  <ion-header>
+    <ion-toolbar class="adly__main__toolbar">
+      <ion-buttons slot="start">
+        <ion-menu-button class="adly__main__toolbar__icons"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>{{ tabName }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content style="overflow: hidden !important">
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
+  <ion-footer> </ion-footer>
+</div>
