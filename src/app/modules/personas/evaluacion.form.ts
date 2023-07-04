@@ -1,5 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { onlyNumber, required } from '@eklipse/utilities';
+import { required, onlyNumber } from '@common/validators';
 
 export class EvaluacionForm extends FormGroup {
   constructor() {

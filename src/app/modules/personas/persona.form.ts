@@ -1,5 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { maxLength, onlyNumber, required } from '@eklipse/utilities';
+import { maxLength, onlyNumber, required } from '@common/validators';
 import { CreateEntidadPayload } from '@http/payloads';
 
 export class PersonaForm extends FormGroup {

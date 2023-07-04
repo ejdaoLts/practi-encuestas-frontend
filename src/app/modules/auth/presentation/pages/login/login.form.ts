@@ -1,6 +1,6 @@
 import { FormControl, FormGroup } from '@angular/forms';
-import { required } from '@eklipse/utilities';
 import { LoginPayload } from '@auth/application';
+import { required } from '@common/validators';
 
 export class LoginForm extends FormGroup {
   constructor() {

@@ -1,4 +1,3 @@
-import { TimeUtilities } from '@eklipse/utilities';
 import { Injectable } from '@angular/core';
 
 import * as relativeTime from 'dayjs/plugin/relativeTime';
@@ -58,7 +57,7 @@ export enum FormatTimes {
 }
 
 @Injectable({ providedIn: 'root' })
-export class TimerService extends TimeUtilities {
+export class TimerService {
   /**
    * Convierte una fecha (si es valida) en un objeto Dayjs.
    * @param date Date | number | string

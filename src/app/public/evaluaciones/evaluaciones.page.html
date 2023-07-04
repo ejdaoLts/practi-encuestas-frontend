@@ -1,104 +1,84 @@
 <ion-content class="ion-padding">
-  <gcm-table-top>
-    <gcm-filter-field [formControl]="filtro"></gcm-filter-field>
+  <mat-tab-group>
+    <mat-tab label="Evaluaciones">
+      <gcm-table-top>
+        <gcm-filter-field [formControl]="filtro"></gcm-filter-field>
 
-    <mat-paginator [pageSizeOptions]="[30]" showFirstLastButtons [hidePageSize]="true">
-    </mat-paginator>
-  </gcm-table-top>
+        <mat-paginator [pageSizeOptions]="[30]" showFirstLastButtons [hidePageSize]="true">
+        </mat-paginator>
+      </gcm-table-top>
 
-  <div class="conciliaciones-datatable__table-container gcm-table__container">
-    <table
-      mat-table
-      [dataSource]="dataSource"
-      multiTemplateDataRows
-      [class.d-none]="!dataSource.data.length || isLoading || !dataSource.filteredData.length"
-      matSort
-    >
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cod.</th>
-        <td mat-cell class="col-7-5" *matCellDef="let el">
-          <div class="gcm-table__principal-column">{{ el.id }}</div>
-        </td>
-      </ng-container>
+      <div class="conciliaciones-datatable__table-container gcm-table__container">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          multiTemplateDataRows
+          [class.d-none]="!dataSource.data.length || isLoading || !dataSource.filteredData.length"
+          matSort
+        >
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cod.</th>
+            <td mat-cell class="col-7-5" *matCellDef="let el">
+              <div class="gcm-table__principal-column">{{ el.id }}</div>
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="tipoEval">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tip. Eval.</th>
-        <td mat-cell class="col-7-5" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-          {{ el.tipoEval }} ({{el.tipo_evaluacion.descripcion}})
-          <div class="gcm-table__subcontent">CREADA POR {{ el.nombreEvaluador }}</div>
-        </td>
-      </ng-container>
+          <ng-container matColumnDef="tipoEval">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tip. Eval.</th>
+            <td mat-cell class="col-7-5" *matCellDef="let el" (click)="clickOnConciliacion(el)">
+              {{ el.tipoEval }} ({{el.tipo_evaluacion.descripcion}})
+              <div class="gcm-table__subcontent">CREADA POR {{ el.nombreEvaluador }}</div>
+            </td>
+          </ng-container>
 
-      <!-- <ng-container matColumnDef="nombreEvaluador">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Evaluador</th>
-        <td mat-cell class="col-10" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-          {{ el.nombreEvaluador }}
-        </td>
-      </ng-container> -->
+          <ng-container matColumnDef="nombreEvaluado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Evaluado</th>
+            <td mat-cell class="col-10" *matCellDef="let el" (click)="clickOnConciliacion(el)">
+              {{ el.nombreEvaluado }}
+            </td>
+          </ng-container>
 
-      <ng-container matColumnDef="nombreEvaluado">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Evaluado</th>
-        <td mat-cell class="col-10" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-          {{ el.nombreEvaluado }}
-        </td>
-      </ng-container>
-
-      <!--
-
-    <ng-container matColumnDef="createdAt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha gestión</th>
-      <td mat-cell class="col-10" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-        {{ el.createdAt | formatDate : 3 }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="nombreTercero">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>ERP</th>
-      <td mat-cell class="col-25" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-        {{ el.nombreTercero }}
-        <div class="gcm-table__subcontent">NIT : {{ el.tercero.nit }}</div>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="nombreRepresentanteTercero">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Resp. ERP</th>
-      <td mat-cell class="col-15" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-        {{ el.nombreRepresentanteTercero }}
-        <div class="gcm-table__subcontent">Telefono : {{ el.tercero.telefono }}</div>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="daysSinceCreatedAt">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dias</th>
-      <td mat-cell class="col-7-5 bolder" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-        {{ el.daysSinceCreatedAt }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
-      <td mat-cell class="col-10" *matCellDef="let el" (click)="clickOnConciliacion(el)">
-        {{ el.estado }}
-      </td>
-    </ng-container> -->
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr
-        has-lines
-        mat-row
-        *matRowDef="let el; columns: displayedColumns"
-        class="gcm-table__element-row selectable  {{
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr
+            has-lines
+            mat-row
+            *matRowDef="let el; columns: displayedColumns"
+            class="gcm-table__element-row selectable  {{
         el.daysSinceCreatedAt > 60 && el.estado === 'PENDIENTE' ? 'unselectable' : ''
       }}"
-        [class.gcm-table__expanded-row]="expandedElement === el"
-        (click)="expandedElement = expandedElement === el ? null : el; $event.stopPropagation()"
-      ></tr>
-    </table>
-    <gcm-table-no-records
-      [isLoading]="isLoading"
-      [dataSource]="dataSource"
-      *ngIf="!dataSource.data.length || !dataSource.filteredData.length || isLoading"
-    >
-    </gcm-table-no-records>
-  </div>
+            [class.gcm-table__expanded-row]="expandedElement === el"
+            (click)="expandedElement = expandedElement === el ? null : el; $event.stopPropagation()"
+          ></tr>
+        </table>
+        <gcm-table-no-records
+          [isLoading]="isLoading"
+          [dataSource]="dataSource"
+          *ngIf="!dataSource.data.length || !dataSource.filteredData.length || isLoading"
+        >
+        </gcm-table-no-records>
+      </div>
+    </mat-tab>
+    <mat-tab label="Estadisticas">
+      <div *ngFor="let a of tiposEvaluaciones">
+        <b
+          >{{a[0].rows[0].nombreEntidad ? 'EVALUACIONES DE '+ a[0].rows[0].nombreEntidad :
+          'EVALUACIONES INDEPENDIENTES'}}</b
+        >
+        <div
+          *ngFor="let i of a"
+          style="
+            padding: 10px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid rgb(0, 0, 0, 0.12);
+          "
+          (click)="clickOnEvaluacionesGrouped(i.rows)"
+        >
+          <div>{{i.nombreTipo}}</div>
+        </div>
+      </div>
+    </mat-tab>
+    <!-- <mat-tab label="Third"> Content 3 </mat-tab> -->
+  </mat-tab-group>
 </ion-content>

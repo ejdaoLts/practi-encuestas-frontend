@@ -2,6 +2,7 @@ export interface IEvaCalT2 {
   tipoEval: string;
   nombreEvaluador: string;
   nombreEvaluado: string;
+  nombreEntidad: string | null;
   id: number;
   tipo_id: number;
   periodo_academico: number;
@@ -38,24 +39,7 @@ export interface IEvaCalT2 {
     username: string | null;
     is_active: number;
   };
-  entidad: {
-    id: number;
-    representante_id: number | null;
-    tipo_documento: number;
-    numero_documento: string;
-    tipo_id: number;
-    nombre_completo: string;
-    telefono: string;
-    entidad_id: number;
-    created_at: Date;
-    created_by: number;
-    updated_at: Date;
-    updated_by: Date;
-    tipo: {
-      id: number;
-      nombre: string;
-    };
-  };
+  entidad: IEntidad;
   maestro?: {
     id: number;
     representante_id: number | null;
@@ -74,4 +58,24 @@ export interface IEvaCalT2 {
       nombre: string;
     };
   };
+}
+
+export interface IEntidad {
+  id: number;
+  representante_id: number | null;
+  tipo_documento: number;
+  numero_documento: string;
+  tipo_id: number;
+  nombre_completo: string;
+  telefono: string;
+  entidad_id: number;
+  created_at: Date;
+  created_by: number;
+  updated_at: Date;
+  updated_by: Date;
+  tipo: {
+    id: number;
+    nombre: string;
+  };
+  entidad?: IEntidad;
 }

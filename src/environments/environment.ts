@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://eklipse.grupoclinicamedicos.com/ctk01hpr79/public',
-  //apiUrl: 'http://localhost:8000',
+  //apiUrl: 'https://eklipse.grupoclinicamedicos.com/ctk01hpr79/public',
+  apiUrl: 'http://localhost:8000',
 };
 
 /*

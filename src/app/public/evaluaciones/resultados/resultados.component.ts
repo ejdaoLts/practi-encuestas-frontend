@@ -18,11 +18,11 @@ export class ResultadosComponent implements OnInit {
   constructor(
     private _dialogRef: MatDialogRef<ResultadosComponent>,
     private _cd: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: IEvaCalT2
+    @Inject(MAT_DIALOG_DATA) public data: { data: IEvaCalT2; customTitle: string | undefined }
   ) {}
 
   ngOnInit(): void {
-    this.resultados = groupByKey(this.data.resultados, 'condicion');
+    this.resultados = groupByKey(this.data.data.resultados, 'condicion');
     this._cd.markForCheck();
   }
 }
