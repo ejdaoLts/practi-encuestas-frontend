@@ -2,6 +2,15 @@
   <mat-tab-group>
     <mat-tab label="Evaluaciones">
       <gcm-table-top>
+        <button
+          mat-icon-button
+          color="primary"
+          style="margin: 0 10px 0 10px"
+          (click)="onExportExcel()"
+        >
+          <mat-icon>save</mat-icon>
+        </button>
+
         <gcm-filter-field [formControl]="filtro"></gcm-filter-field>
 
         <mat-paginator [pageSizeOptions]="[30]" showFirstLastButtons [hidePageSize]="true">

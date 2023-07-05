@@ -24,7 +24,7 @@ export class EvaluacionesService extends BaseHttp {
         map(_ =>
           _.map(_ => {
             if ([5, 6].indexOf(_.tipo_id) >= 0) {
-              _.nombreEvaluado += ` A ${_.maestro!.nombre_completo}`;
+              _.nombreEvaluado += ` POR ${_.maestro!.nombre_completo}`;
             }
             _.nombreEntidad = _.entidad.entidad ? _.entidad.entidad.nombre_completo : null;
             return _;

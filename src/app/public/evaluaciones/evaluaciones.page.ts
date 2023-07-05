@@ -15,8 +15,9 @@ import { GcmFieldsModule } from '@eklipse/components/fields';
 import { ResultadosComponent } from './resultados/resultados.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { groupByKey } from '@eklipse/utilities';
+import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { cloneDeep, orderBy } from 'lodash';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ import { cloneDeep, orderBy } from 'lodash';
     MatTabsModule,
     FormsModule,
     ReactiveFormsModule,
+    MatButtonModule,
     GcmTablesModule,
     GcmFieldsModule,
     MatIconModule,
@@ -67,6 +69,20 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     try {
       await this._services.getResultados(false);
     } catch (error) {}
+  }
+
+  public onExportExcel() {
+    const data = cloneDeep(this.dataSource.filteredData);
+
+    const d = data.map(_ => {
+      return {
+        tipoEvaluacion: _.tipo_evaluacion.id,
+        nombreEvaluacion: _.tipo_evaluacion.nombre,
+        usuarioEvaluado: _.nombreEvaluado,
+        creadaPor: _.nombreEvaluador,
+      };
+    });
+    saveAsExcel(d);
   }
 
   private _instanceDataSource(data: IEvaCalT2[]): void {
@@ -125,9 +141,9 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       }
     });
 
-    firstValue.map(_ => {
+    /* firstValue.map(_ => {
       _.calificacion = +(_.calificacion / data.length).toFixed(2);
-    });
+    }); */
 
     this._dialog.open(ResultadosComponent, {
       width: '80vw',

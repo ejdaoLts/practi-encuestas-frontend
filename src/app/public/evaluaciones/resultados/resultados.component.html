@@ -1,4 +1,7 @@
 <section mat-dialog-title>
+  <button mat-icon-button color="primary" style="margin: 0 10px 0 10px" (click)="onExportExcel()">
+    <mat-icon>save</mat-icon>
+  </button>
   {{ !data.customTitle ? 'Resultado Evaluación de ' + data.data.nombreEvaluado : data.customTitle }}
 </section>
 
@@ -12,7 +15,8 @@
       <div>{{ r.aspecto_evaluar }}</div>
       <div style="font-size: 12px">
         <b>
-          {{ r.calificacion }} ({{
+          {{ r.calificacion }}
+          <!-- ({{
             !r.calificacion
               ? 'NO APLICA'
               : r.calificacion >= 1 && r.calificacion < 2
@@ -24,7 +28,7 @@
               : r.calificacion >= 4 && r.calificacion < 5
               ? 'DE ACUERDO'
               : 'TOTALMENTE DE ACUERDO'
-          }})
+          }}) -->
         </b>
         <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
       </div>
