@@ -141,9 +141,9 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       }
     });
 
-    /* firstValue.map(_ => {
+    firstValue.map(_ => {
       _.calificacion = +(_.calificacion / data.length).toFixed(2);
-    }); */
+    });
 
     this._dialog.open(ResultadosComponent, {
       width: '80vw',

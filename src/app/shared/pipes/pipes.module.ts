@@ -3,8 +3,15 @@ import { FormatDatePipe } from './format-date.pipe';
 import { SumValuesPipe } from './sum-values.pipe';
 import { FormatMoneyPipe } from './format-money.pipe';
 import { TimeFromNowPipe } from './time-from-now.pipe';
+import { GcmFormatDecimalPipe } from './format-decimal.pipe';
 
-const pipes = [FormatDatePipe, SumValuesPipe, FormatMoneyPipe, TimeFromNowPipe];
+const pipes = [
+  FormatDatePipe,
+  GcmFormatDecimalPipe,
+  SumValuesPipe,
+  FormatMoneyPipe,
+  TimeFromNowPipe,
+];
 
 @NgModule({
   declarations: pipes,

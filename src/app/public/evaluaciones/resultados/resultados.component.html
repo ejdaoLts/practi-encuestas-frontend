@@ -15,8 +15,7 @@
       <div>{{ r.aspecto_evaluar }}</div>
       <div style="font-size: 12px">
         <b>
-          {{ r.calificacion }}
-          <!-- ({{
+          {{
             !r.calificacion
               ? 'NO APLICA'
               : r.calificacion >= 1 && r.calificacion < 2
@@ -28,7 +27,8 @@
               : r.calificacion >= 4 && r.calificacion < 5
               ? 'DE ACUERDO'
               : 'TOTALMENTE DE ACUERDO'
-          }}) -->
+          }}
+          ({{ r.calificacion }} - {{ (r.calificacion * 100) / 5 | formatDecimal }}%)
         </b>
         <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
       </div>

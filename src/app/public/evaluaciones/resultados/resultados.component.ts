@@ -7,10 +7,18 @@ import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { result } from 'lodash';
+import { PipesModule } from '@shared/pipes';
 
 @Component({
   standalone: true,
-  imports: [MatDialogModule, CommonModule, MatButtonModule, MatIconModule, MatDividerModule],
+  imports: [
+    MatDialogModule,
+    CommonModule,
+    MatButtonModule,
+    PipesModule,
+    MatIconModule,
+    MatDividerModule,
+  ],
   selector: 'app-resultados',
   templateUrl: './resultados.component.html',
   styleUrls: ['./resultados.component.scss'],
@@ -37,33 +45,51 @@ export class ResultadosComponent implements OnInit {
         data.push({
           '#': row.orden,
           orden: i + 1,
-          condicion: !i ? row.condicion : '',
-          aspectoEvaluar: row.aspecto_evaluar,
           calificacion: row.calificacion,
+          cumplimiento: (row.calificacion * 100) / 5,
+          //condicion: !i ? row.condicion : '',
+          condicion: row.condicion,
+          aspectoEvaluar: row.aspecto_evaluar,
         });
+      });
+
+      data.push({
+        '#': '',
+        orden: '',
+        calificacion: '',
+        cumplimiento: '',
+        condicion: '',
+        aspectoEvaluar: '',
       });
     });
 
     data.push({
       '#': '',
       orden: '',
+      calificacion: '',
+      cumplimiento: '',
       condicion: '',
       aspectoEvaluar: '',
-      calificacion: '',
     });
 
-    this.data.data.preguntasLibres.forEach((_, i) => {
-      data.push({
-        '#': i + 1,
-        orden: '',
-        condicion: '',
-        aspectoEvaluar: _.pta,
-        calificacion: _.rta,
+    if (this.data.data.preguntasLibres) {
+      this.data.data.preguntasLibres.forEach((_, i) => {
+        data.push({
+          '#': i + 1,
+          orden: '',
+          calificacion: '',
+          cumplimiento: '',
+          condicion: _.pta,
+          aspectoEvaluar: _.rta,
+        });
       });
-    });
-    saveAsExcel(
-      data,
-      `EVALUACION ${this.data.data.nombreEvaluado} ${this.data.data.tipo_evaluacion.nombre}`
-    );
+    }
+
+    const title =
+      this.data.data.nombreEvaluado && this.data.data.tipo_evaluacion.nombre
+        ? `EVALUACION ${this.data.data.nombreEvaluado} ${this.data.data.tipo_evaluacion.nombre}`
+        : this.data.customTitle;
+
+    saveAsExcel(data, `EVALUACION ${title}`);
   }
 }
