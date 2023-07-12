@@ -159,8 +159,8 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
 
   public async clickOnFinalizar(tipoEvaluacion: TiposEvaluacion): Promise<void> {
     const alert = await this._alertController.create({
-      header: 'Cerrar sesión',
-      message: '¿Está segur@ que desea cerrar la sesión?',
+      header: 'Finalizar evaluación',
+      message: '¿Está segur@ que desea finalizar esta evaluación?',
       buttons: [
         {
           text: 'Cancelar',
