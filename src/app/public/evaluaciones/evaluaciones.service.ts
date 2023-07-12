@@ -23,8 +23,8 @@ export class EvaluacionesService extends BaseHttp {
         DATA as any as Observable<IEvaCalT2[]>
       )*/
         .pipe(
-          map(_ =>
-            _.filter(d => !d.nombreEvaluado.includes('TESTING')).map(_ => {
+          map(_2 =>
+            _2.map(_ => {
               if ([5, 6].indexOf(_.tipo_id) >= 0) {
                 _.nombreEvaluado += ` POR ${_.maestro!.nombre_completo}`;
               }
