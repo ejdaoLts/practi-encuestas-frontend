@@ -15,20 +15,21 @@
       <div>{{ r.aspecto_evaluar }}</div>
       <div style="font-size: 12px">
         <b>
-          {{ r.calificacion }}
-          ({{
-            !r.calificacion
+          <!-- {{ r.val_cond }} ({{ r.calificacion }}%) -->
+          {{
+            !r.val_cond
+              ? 'NO VALIDO'
+              : r.val_cond == 1
+              ? 'CUMPLE'
+              : r.val_cond == 2
+              ? 'CUMPLE PARCIALMENTE'
+              : r.val_cond == 3
+              ? 'NO CUMPLE'
+              : r.val_cond == 4
               ? 'NO APLICA'
-              : r.calificacion >= 1 && r.calificacion < 2
-              ? 'TOTALMENTE EN DESACUERDO'
-              : r.calificacion >= 2 && r.calificacion < 3
-              ? 'EN DESACUERDO'
-              : r.calificacion >= 3 && r.calificacion < 4
-              ? 'NI DE ACUERDO NI EN DESACUERDO'
-              : r.calificacion >= 4 && r.calificacion < 5
-              ? 'DE ACUERDO'
-              : 'TOTALMENTE DE ACUERDO'
-          }})
+              : 'NO VALIDO'
+          }}
+          ({{ r.calificacion }}%)
         </b>
         <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
       </div>

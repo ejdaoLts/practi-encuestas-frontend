@@ -18,23 +18,24 @@ export class EvaluacionesService extends BaseHttp {
     if (!refresh && this._subject.value.lastUpdate) return this._subject.value.data;
 
     return firstValueFrom(
-      /* this._http
-        .get<IEvaCalT2[]>(`${END_POINTS.V1.EVALUACIONES}/calificadas`) */ (
+      this._http
+        .get<IEvaCalT2[]>(`${END_POINTS.V1.EVALUACIONES}/calificadas/t1`) /*(
         DATA as any as Observable<IEvaCalT2[]>
-      ).pipe(
-        map(_ =>
-          _.map(_ => {
-            if ([5, 6].indexOf(_.tipo_id) >= 0) {
-              _.nombreEvaluado += ` POR ${_.maestro!.nombre_completo}`;
-            }
-            _.nombreEntidad = _.entidad.entidad ? _.entidad.entidad.nombre_completo : null;
-            return _;
+      )*/
+        .pipe(
+          map(_ =>
+            _.map(_ => {
+              if ([5, 6].indexOf(_.tipo_id) >= 0) {
+                _.nombreEvaluado += ` POR ${_.maestro!.nombre_completo}`;
+              }
+              _.nombreEntidad = _.entidad.entidad ? _.entidad.entidad.nombre_completo : null;
+              return _;
+            })
+          ),
+          tap(_ => {
+            this._subject.next({ data: _, lastUpdate: new Date() });
           })
-        ),
-        tap(_ => {
-          this._subject.next({ data: _, lastUpdate: new Date() });
-        })
-      )
+        )
     );
   }
 
