@@ -42,8 +42,14 @@ export const SIDE_NAV: LaySnavItems[] = [
 export const SIDE_NAV_PUBLIC: LaySnavItems[] = [
   {
     type: 'link',
-    name: 'Evaluaciones',
+    name: 'Evaluaciones a personas',
     icon: 'person',
     url: 'public/evaluaciones',
+  },
+  {
+    type: 'link',
+    name: 'Evaluaciones a entidades',
+    icon: 'person',
+    url: 'public/evaluaciones-entidades',
   },
 ];

@@ -1,0 +1,56 @@
+<section mat-dialog-title>
+  <button mat-icon-button color="primary" style="margin: 0 10px 0 10px" (click)="onExportExcel()">
+    <mat-icon>save</mat-icon>
+  </button>
+  {{ !data.customTitle ? 'Resultado Evaluación de ' + data.data.nombreEvaluado : data.customTitle }}
+</section>
+
+<section mat-dialog-content>
+  <div *ngFor="let i of resultados; let id = index" class="box-res">
+    <b>{{ i.key }}</b>
+    <mat-divider></mat-divider>
+
+    <div *ngFor="let r of i.rows; let rd = index" [class.mgbtn10]="rd !== i.rows.length - 1">
+      <!-- {{ rd + 1 }} - -->
+      <div>{{ r.aspecto_evaluar }}</div>
+      <div style="font-size: 12px">
+        <b>
+          <!-- {{ r.val_cond }} ({{ r.calificacion }}%) -->
+          {{
+            !r.val_cond
+              ? 'NO VALIDO'
+              : r.val_cond == 1
+              ? 'CUMPLE'
+              : r.val_cond == 2
+              ? 'CUMPLE PARCIALMENTE'
+              : r.val_cond == 3
+              ? 'NO CUMPLE'
+              : r.val_cond == 4
+              ? 'NO APLICA'
+              : 'NO VALIDO'
+          }}
+          ({{ r.calificacion }}%)
+        </b>
+        <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
+      </div>
+    </div>
+  </div>
+
+  <div class="box-res" *ngIf="data.data.preguntasLibres && data.data.preguntasLibres.length">
+    <b>PREGUNTAS DE LIBRE INTERPRETACIÓN</b>
+    <mat-divider></mat-divider>
+    <div
+      *ngFor="let r of data.data.preguntasLibres; let rd = index"
+      [class.mgbtn10]="rd !== data.data.preguntasLibres.length - 1"
+    >
+      <!-- {{ rd + 1 }} - -->
+      <div>{{ r.pta }}</div>
+      <div style="font-size: 12px">
+        <b>
+          {{ r.rta }}
+        </b>
+        <mat-divider *ngIf="rd !== data.data.preguntasLibres.length - 1"></mat-divider>
+      </div>
+    </div>
+  </div>
+</section>

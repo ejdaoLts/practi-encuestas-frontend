@@ -49,6 +49,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./public/evaluaciones/evaluaciones.page').then(m => m.EvaluacionesPage),
       },
+      {
+        path: 'evaluaciones-entidades',
+        loadComponent: () =>
+          import('./public/eva-entidades/evaluaciones.page').then(m => m.EvaluacionesPage),
+      },
     ],
   },
 ];
