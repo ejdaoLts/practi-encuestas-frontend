@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
@@ -6,7 +6,6 @@ import { EvaluacionesService } from './evaluaciones.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { IEvaCalT2 } from './evaluaciones.interfaces';
 import { Subject, takeUntil } from 'rxjs';
 import { GcmTablesModule } from '@eklipse/components/tables';
 import { PipesModule } from '@shared/pipes';
@@ -18,6 +17,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { cloneDeep, orderBy } from 'lodash';
 import { MatButtonModule } from '@angular/material/button';
+import { GcmAreaModule } from '@common/charts';
+import { generarGraficas } from './evaluaciones.functions';
+import { IEvaCalT1 } from './evaluaciones.interfaces';
 
 @Component({
   standalone: true,
@@ -37,6 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
     PipesModule,
     MatDialogModule,
     ResultadosComponent,
+    GcmAreaModule,
   ],
   providers: [EvaluacionesService],
 })
@@ -44,7 +47,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
-  public dataSource = new MatTableDataSource<IEvaCalT2>([]);
+  public dataSource = new MatTableDataSource<IEvaCalT1>([]);
   public filtro = new FormControl('');
   public displayedColumns = ['id', 'tipoEval', 'nombreEvaluado'];
   public expandedElement: any;
@@ -52,9 +55,16 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
 
   public tiposEvaluaciones: any[] = [];
 
+  public grafica: any;
+  public graficaRegenerada = false;
+
   private _unsubscribe$ = new Subject<void>();
 
-  constructor(private _services: EvaluacionesService, private _dialog: MatDialog) {
+  constructor(
+    private _services: EvaluacionesService,
+    private _dialog: MatDialog,
+    private _cd: ChangeDetectorRef
+  ) {
     this.filtro.valueChanges.pipe(takeUntil(this._unsubscribe$)).subscribe(_ => {
       this.dataSource.filter = _ ? _.trim().toLowerCase() : '';
     });
@@ -64,11 +74,31 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._services.observable().subscribe(_ => {
       this._instanceDataSource(_.data);
       this._generateEstadisticas(_.data);
+      if (_.lastUpdate) this.grafica = generarGraficas(_.data);
     });
 
     try {
       await this._services.getResultados(false);
     } catch (error) {}
+  }
+
+  public fetchByOrden(labels: number[]) {
+    const ast: any = [];
+    labels.forEach(d => {
+      const dt = this.grafica.aspectosEvaluados.filter((_: any) => _.key === d);
+      if (dt.length) ast.push(dt[0]);
+    });
+
+    return ast;
+  }
+
+  public onChangeTabs() {
+    this.graficaRegenerada = false;
+
+    setTimeout(() => {
+      this.graficaRegenerada = true;
+      this._cd.markForCheck();
+    }, 500);
   }
 
   public onExportExcel() {
@@ -85,8 +115,8 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     saveAsExcel(d);
   }
 
-  private _instanceDataSource(data: IEvaCalT2[]): void {
-    this.dataSource = new MatTableDataSource<IEvaCalT2>(data);
+  private _instanceDataSource(data: IEvaCalT1[]): void {
+    this.dataSource = new MatTableDataSource<IEvaCalT1>(data);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -104,7 +134,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     }); */
   }
 
-  private _generateEstadisticas(data: IEvaCalT2[]) {
+  private _generateEstadisticas(data: IEvaCalT1[]) {
     const groupedByEntidad = groupByKey(data, 'nombreEntidad');
 
     groupedByEntidad.forEach(byEnt => {
@@ -116,7 +146,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       groupedByTipoEvalOrdered.forEach(_ => {
         const ft = {
           total: `${_.rows.length} EVALUACIONES`,
-          tipo: _.rows[0].tipoEval,
+          tipo: _.rows[0].tipo_evaluacion.nombre,
           nombreTipo: _.rows[0].tipo_evaluacion.nombre,
           rows: _.rows,
         };
@@ -128,7 +158,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     });
   }
 
-  public clickOnEvaluacionesGrouped(rows: IEvaCalT2[]) {
+  public clickOnEvaluacionesGrouped(rows: IEvaCalT1[]) {
     const data = cloneDeep(rows);
     const firstValue = data[0].resultados;
 
@@ -154,7 +184,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
         data: { resultados: firstValue },
         customTitle: `${rows[0].tipo_evaluacion.nombre}, PROMEDIADO DE ${
           rows.length
-        } EVALUACIONES (${rows[0].nombreEntidad || 'NO PERTENECE A NINGUNA ENTIDAD'})`,
+        } EVALUACIONES (${rows[0].nombreEvaluado || 'NO PERTENECE A NINGUNA ENTIDAD'})`,
       },
     });
   }

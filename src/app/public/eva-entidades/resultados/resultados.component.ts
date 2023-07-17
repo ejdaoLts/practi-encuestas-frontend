@@ -1,12 +1,11 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
-import { IEvaCalT2 } from '../evaluaciones.interfaces';
 import { CommonModule } from '@angular/common';
 import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { result } from 'lodash';
+import { IEvaCalT1, IResultado } from '../evaluaciones.interfaces';
 
 @Component({
   standalone: true,
@@ -19,9 +18,8 @@ export class ResultadosComponent implements OnInit {
   resultados: any[] = [];
 
   constructor(
-    private _dialogRef: MatDialogRef<ResultadosComponent>,
     private _cd: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: { data: IEvaCalT2; customTitle: string | undefined }
+    @Inject(MAT_DIALOG_DATA) public data: { data: IEvaCalT1; customTitle: string | undefined }
   ) {}
 
   ngOnInit(): void {
@@ -37,33 +35,89 @@ export class ResultadosComponent implements OnInit {
         data.push({
           '#': row.orden,
           orden: i + 1,
+          calificacion: row.calificacion,
           condicion: !i ? row.condicion : '',
           aspectoEvaluar: row.aspecto_evaluar,
-          calificacion: row.calificacion,
+          observacion: row.observacion,
         });
+      });
+
+      data.push({
+        '#': '',
+        orden: '',
+        calificacion: this.calcularCalificacion(_.rows),
+        condicion: 'TOTAL',
+        aspectoEvaluar: '',
+        observacion: '',
+      });
+
+      data.push({
+        '#': '',
+        orden: '',
+        calificacion: '',
+        condicion: '',
+        aspectoEvaluar: '',
+        observacion: '',
       });
     });
 
     data.push({
       '#': '',
       orden: '',
+      calificacion: '',
       condicion: '',
       aspectoEvaluar: '',
-      calificacion: '',
+      observacion: '',
     });
 
-    this.data.data.preguntasLibres.forEach((_, i) => {
-      data.push({
-        '#': i + 1,
-        orden: '',
-        condicion: '',
-        aspectoEvaluar: _.pta,
-        calificacion: _.rta,
-      });
+    data.push({
+      '#': '',
+      orden: '',
+      calificacion: this.calcularCalificacionGlobal(),
+      condicion: 'TOTAL',
+      aspectoEvaluar: '',
+      observacion: '',
     });
+
     saveAsExcel(
       data,
       `EVALUACION ${this.data.data.nombreEvaluado} ${this.data.data.tipo_evaluacion.nombre}`
     );
+  }
+
+  calcularCalificacion(rows: IResultado[]) {
+    let exp = 0,
+      total = 0;
+
+    rows.forEach(_ => {
+      if (_.calificacion) {
+        exp++;
+        total += _.calificacion;
+      }
+    });
+
+    return +(total / exp).toFixed(2);
+  }
+
+  calcularCalificacionGlobal() {
+    let aspectos = 0,
+      totalAsp = 0;
+
+    this.resultados.forEach(dt => {
+      let exp = 0,
+        total = 0;
+
+      dt.rows.forEach((_: any) => {
+        if (_.calificacion) {
+          exp++;
+          total += _.calificacion;
+        }
+      });
+
+      aspectos++;
+      totalAsp += total / exp;
+    });
+
+    return +(totalAsp / aspectos).toFixed(2);
   }
 }

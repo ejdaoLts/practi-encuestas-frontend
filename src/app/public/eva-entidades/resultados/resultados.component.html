@@ -7,15 +7,13 @@
 
 <section mat-dialog-content>
   <div *ngFor="let i of resultados; let id = index" class="box-res">
-    <b>{{ i.key }}</b>
+    <b>{{ i.key }} </b>
     <mat-divider></mat-divider>
 
     <div *ngFor="let r of i.rows; let rd = index" [class.mgbtn10]="rd !== i.rows.length - 1">
-      <!-- {{ rd + 1 }} - -->
       <div>{{ r.aspecto_evaluar }}</div>
       <div style="font-size: 12px">
         <b>
-          <!-- {{ r.val_cond }} ({{ r.calificacion }}%) -->
           {{
             !r.val_cond
               ? 'NO VALIDO'
@@ -29,28 +27,15 @@
               ? 'NO APLICA'
               : 'NO VALIDO'
           }}
-          ({{ r.calificacion }}%)
-        </b>
+          ({{ r.calificacion }}%) </b
+        ><br *ngIf="r.observacion" />
+        <span *ngIf="r.observacion"><b>Observación:</b> {{ r.observacion }}</span>
         <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
       </div>
     </div>
+    <br />
+    <b>CALIFICACIÓN: {{ calcularCalificacion(i.rows) }}%</b>
   </div>
 
-  <div class="box-res" *ngIf="data.data.preguntasLibres && data.data.preguntasLibres.length">
-    <b>PREGUNTAS DE LIBRE INTERPRETACIÓN</b>
-    <mat-divider></mat-divider>
-    <div
-      *ngFor="let r of data.data.preguntasLibres; let rd = index"
-      [class.mgbtn10]="rd !== data.data.preguntasLibres.length - 1"
-    >
-      <!-- {{ rd + 1 }} - -->
-      <div>{{ r.pta }}</div>
-      <div style="font-size: 12px">
-        <b>
-          {{ r.rta }}
-        </b>
-        <mat-divider *ngIf="rd !== data.data.preguntasLibres.length - 1"></mat-divider>
-      </div>
-    </div>
-  </div>
+  <b>CALIFICACIÓN GENERAL: {{ calcularCalificacionGlobal() }}%</b>
 </section>

@@ -1,5 +1,5 @@
 <ion-content class="ion-padding">
-  <mat-tab-group>
+  <mat-tab-group (selectedIndexChange)="onChangeTabs()">
     <mat-tab label="Evaluaciones">
       <gcm-table-top>
         <button
@@ -67,26 +67,25 @@
         </gcm-table-no-records>
       </div>
     </mat-tab>
-    <!-- <mat-tab label="Estadisticas">
-      <div *ngFor="let a of tiposEvaluaciones">
-        <b
-          >{{a[0].rows[0].nombreEntidad ? 'EVALUACIONES DE '+ a[0].rows[0].nombreEntidad :
-          'EVALUACIONES INDEPENDIENTES'}}</b
-        >
-        <div
-          *ngFor="let i of a"
-          style="
-            padding: 10px;
-            background: white;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            border: 1px solid rgb(0, 0, 0, 0.12);
-          "
-          (click)="clickOnEvaluacionesGrouped(i.rows)"
-        >
-          <div>{{i.nombreTipo}}</div>
+    <mat-tab label="Estadisticas">
+      <div class="container" *ngIf="grafica">
+        <div class="row" *ngFor="let data of grafica.datasetsGrouped; let i = index">
+          <div class="col-12 col-lg-6">
+            <gcm-area
+              [data]="data"
+              [description]="data.aspecto"
+              *ngIf="graficaRegenerada"
+            ></gcm-area>
+          </div>
+          <div class="col-12 col-lg-6">
+            <br />
+            <br />
+            <div *ngFor="let des of fetchByOrden(data.labels)">
+              <span><b>{{des.key}} :</b> {{des.description }}</span><br /><br />
+            </div>
+          </div>
         </div>
       </div>
-    </mat-tab> -->
+    </mat-tab>
   </mat-tab-group>
 </ion-content>

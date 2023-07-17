@@ -1,4 +1,11 @@
+$SM_RESOLUTION: 361px;
+$MD_RESOLUTION: 641px;
+$LG_RESOLUTION: 721px;
+$XL_RESOLUTION: 961px;
+$XXL_RESOLUTION: 1201px;
+
 @import 'utilities';
+@import 'grids';
 @import 'themes/main';
 
 .tab {

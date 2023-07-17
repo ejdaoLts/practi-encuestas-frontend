@@ -1,0 +1,13 @@
+.gcm__chartjs__stacked-bar {
+  &__container {
+    text-align: center;
+  }
+  &__description {
+    font-weight: bolder;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
+      Geneva, Verdana, sans-serif;
+  }
+  &__canvas {
+    max-height: 280px;
+  }
+}

@@ -30,9 +30,11 @@
     "@eklipse/components": "^11.0.1",
     "@eklipse/utilities": "^7.0.1",
     "@ionic/angular": "^7.0.0",
+    "chart.js": "^3.9.1",
     "dayjs": "^1.11.7",
     "ionicons": "^7.0.0",
     "lodash": "^4.17.21",
+    "ng2-charts": "^4.0.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

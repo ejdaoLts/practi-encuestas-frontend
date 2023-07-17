@@ -1,0 +1,12 @@
+<div class="gcm__chartjs__stacked-bar__container {{ class }}" [style]="style">
+  <span class="gcm__chartjs__stacked-bar__description">{{ description }}</span>
+  <canvas
+    class="gcm__chartjs__stacked-bar__canvas"
+    baseChart
+    [datasets]="datasets"
+    [labels]="labels"
+    [options]="barChartOptions"
+    [legend]="barChartLegend"
+  >
+  </canvas>
+</div>
