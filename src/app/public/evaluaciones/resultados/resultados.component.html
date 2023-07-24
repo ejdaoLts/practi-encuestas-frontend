@@ -30,6 +30,16 @@
           }}
           ({{ r.calificacion }} - {{ (r.calificacion * 100) / 5 | formatDecimal }}%)
         </b>
+        <br />
+        <div style="font-weight: 600">
+          {{ r._1 ? 'CANT. CALIF. 1 : ' + r._1 : '' }}<br *ngIf="r._1" />
+          {{ r._2 ? 'CANT. CALIF. 2 : ' + r._2 : '' }}<br *ngIf="r._2" />
+          {{ r._3 ? 'CANT. CALIF. 3 : ' + r._3 : '' }}<br *ngIf="r._3" />
+          {{ r._4 ? 'CANT. CALIF. 4 : ' + r._4 : '' }}<br *ngIf="r._4" />
+          {{ r._5 ? 'CANT. CALIF. 5 : ' + r._5 : '' }}<br *ngIf="r._5" />
+          {{ r['_NO APLICA'] ? 'CANT. CALIF. NO APLICA : ' + r['_NO APLICA'] : ''
+          }}<br *ngIf="r['_NO APLICA']" />
+        </div>
         <mat-divider *ngIf="rd !== i.rows.length - 1"></mat-divider>
       </div>
     </div>

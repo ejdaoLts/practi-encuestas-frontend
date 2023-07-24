@@ -133,12 +133,15 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     const firstValue = data[0].resultados;
 
     data.forEach((_, i) => {
-      if (i > 0) {
-        _.resultados.forEach(resultado => {
-          firstValue.filter(val => val.orden === resultado.orden)[0].calificacion +=
-            resultado.calificacion;
-        });
-      }
+      _.resultados.map((resultado: any) => {
+        const val: any = firstValue.filter(val => val.orden === resultado.orden)[0];
+        if (i > 0) {
+          val.calificacion += resultado.calificacion;
+        }
+        if (!val[`_${resultado.calificacion || 'NO APLICA'}`])
+          val[`_${resultado.calificacion || 'NO APLICA'}`] = 1;
+        else val[`_${resultado.calificacion || 'NO APLICA'}`]++;
+      });
     });
 
     firstValue.map(_ => {

@@ -9,6 +9,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { result } from 'lodash';
 import { PipesModule } from '@shared/pipes';
 
+const emptyObj = {
+  '#': '',
+  orden: '',
+  calificacion: '',
+  cantCal1: '',
+  cantCal2: '',
+  cantCal3: '',
+  cantCal4: '',
+  cantCal5: '',
+  'cantCal_NO APLICA': '',
+  cumplimiento: '',
+  condicion: '',
+  aspectoEvaluar: '',
+};
+
 @Component({
   standalone: true,
   imports: [
@@ -46,30 +61,20 @@ export class ResultadosComponent implements OnInit {
           '#': row.orden,
           orden: i + 1,
           calificacion: row.calificacion,
+          cantCal1: row._1 ? row._1 : 0,
+          cantCal2: row._2 ? row._2 : 0,
+          cantCal3: row._3 ? row._3 : 0,
+          cantCal4: row._4 ? row._4 : 0,
+          cantCal5: row._5 ? row._5 : 0,
+          'cantCal_NO APLICA': row['_NO APLICA'] ? row['_NO APLICA'] : 0,
           cumplimiento: (row.calificacion * 100) / 5,
-          //condicion: !i ? row.condicion : '',
           condicion: row.condicion,
           aspectoEvaluar: row.aspecto_evaluar,
         });
       });
 
-      data.push({
-        '#': '',
-        orden: '',
-        calificacion: '',
-        cumplimiento: '',
-        condicion: '',
-        aspectoEvaluar: '',
-      });
-    });
-
-    data.push({
-      '#': '',
-      orden: '',
-      calificacion: '',
-      cumplimiento: '',
-      condicion: '',
-      aspectoEvaluar: '',
+      data.push(emptyObj);
+      data.push(emptyObj);
     });
 
     if (this.data.data.preguntasLibres) {
