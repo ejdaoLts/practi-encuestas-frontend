@@ -47,6 +47,10 @@ export class LoginPage {
     }
   }
 
+  redirectToPublicData() {
+    this._router.navigate(['public/evaluaciones']);
+  }
+
   get isAuthenticating(): boolean {
     return this._isAuthenticating;
   }

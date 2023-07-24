@@ -39,6 +39,10 @@
         <ion-button type="submit" class="bolder" [disabled]="isAuthenticating || !loginForm.valid">
           INICIAR SESIÓN
         </ion-button>
+        <br />
+        <ion-button type="button" class="bolder" (click)="redirectToPublicData()">
+          DATA PUBLICA
+        </ion-button>
       </form>
     </div>
   </section>
