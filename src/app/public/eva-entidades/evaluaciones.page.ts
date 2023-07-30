@@ -17,8 +17,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { cloneDeep, orderBy } from 'lodash';
 import { MatButtonModule } from '@angular/material/button';
-import { GcmAreaModule } from '@common/charts';
-import { generarGraficas } from './evaluaciones.functions';
+import { GcmAreaModule, GcmStackedBarModule } from '@common/charts';
+import { generarGraficas, generarGraficasCondiciones } from './evaluaciones.functions';
 import { IEvaCalT1 } from './evaluaciones.interfaces';
 
 @Component({
@@ -40,6 +40,7 @@ import { IEvaCalT1 } from './evaluaciones.interfaces';
     MatDialogModule,
     ResultadosComponent,
     GcmAreaModule,
+    GcmStackedBarModule,
   ],
   providers: [EvaluacionesService],
 })
@@ -54,6 +55,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   public isLoading = false;
 
   public tiposEvaluaciones: any[] = [];
+  public calificacionesCondiciones: any;
 
   public grafica: any;
   public graficaRegenerada = false;
@@ -74,6 +76,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
     this._services.observable().subscribe(_ => {
       this._instanceDataSource(_.data);
       this._generateEstadisticas(_.data);
+      this.calificacionesCondiciones = generarGraficasCondiciones(_.data);
       if (_.lastUpdate) this.grafica = generarGraficas(_.data);
     });
 

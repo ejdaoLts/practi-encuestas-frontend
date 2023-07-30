@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BaseHttp } from '@shared/bases';
 import { END_POINTS } from '@shared/constants';
-import { BehaviorSubject, firstValueFrom, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map, tap } from 'rxjs';
 import { IEvaCalT2 } from './evaluaciones.interfaces';
+import { DATA } from './mok';
 
 @Injectable()
 export class EvaluacionesService extends BaseHttp {

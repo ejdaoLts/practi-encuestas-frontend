@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BaseHttp } from '@shared/bases';
-import { BehaviorSubject, firstValueFrom, map, tap } from 'rxjs';
-import { IEvaCalT1 } from './evaluaciones.interfaces';
+import { BehaviorSubject, Observable, firstValueFrom, map, tap } from 'rxjs';
+import { ICalCondicion, IEvaCalT1 } from './evaluaciones.interfaces';
 import { END_POINTS } from '@shared/constants';
+import { DATA } from './mok';
+import { cloneDeep } from 'lodash';
+import { groupByKey, orderBy } from '@eklipse/utilities';
+import { calcularCalificacionCondicion } from './evaluaciones.functions';
 
 @Injectable()
 export class EvaluacionesService extends BaseHttp {
@@ -22,13 +26,35 @@ export class EvaluacionesService extends BaseHttp {
         DATA as any as Observable<IEvaCalT1[]>
       )*/
         .pipe(
-          map(_ =>
-            _.map(_ => {
-              return _;
+          map(res1 =>
+            res1.map(res2 => {
+              const resultadosGrouped = groupByKey(cloneDeep(res2.resultados), 'condicion');
+
+              const calificaciones: ICalCondicion[] = [];
+
+              resultadosGrouped.forEach(resultado => {
+                calificaciones.push({
+                  nombre: resultado.name,
+                  calificacion: calcularCalificacionCondicion(resultado.rows),
+                });
+              });
+
+              res2.calificacionFinal = 0;
+              res2.resultadosCondiciones = calificaciones;
+
+              calificaciones.forEach(cal => {
+                console.log(cal);
+                res2.calificacionFinal += cal.calificacion;
+              });
+
+              res2.calificacionFinal = +(res2.calificacionFinal / calificaciones.length).toFixed(2);
+
+              return res2;
             })
           ),
           tap(_ => {
-            this._subject.next({ data: _, lastUpdate: new Date() });
+            const finallyD = orderBy(_, 'nombreEvaluado', 'asc');
+            this._subject.next({ data: finallyD, lastUpdate: new Date() });
           })
         )
     );

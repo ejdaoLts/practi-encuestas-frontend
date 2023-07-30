@@ -6,6 +6,7 @@ import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IEvaCalT1, IResultado } from '../evaluaciones.interfaces';
+import { calcularCalificacionCondicion } from '../evaluaciones.functions';
 
 @Component({
   standalone: true,
@@ -86,17 +87,7 @@ export class ResultadosComponent implements OnInit {
   }
 
   calcularCalificacion(rows: IResultado[]) {
-    let exp = 0,
-      total = 0;
-
-    rows.forEach(_ => {
-      if (_.calificacion) {
-        exp++;
-        total += _.calificacion;
-      }
-    });
-
-    return +(total / exp).toFixed(2);
+    return calcularCalificacionCondicion(rows);
   }
 
   calcularCalificacionGlobal() {

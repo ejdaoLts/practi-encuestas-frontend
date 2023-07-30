@@ -67,22 +67,36 @@
         </gcm-table-no-records>
       </div>
     </mat-tab>
-    <mat-tab label="Estadisticas">
+    <mat-tab label="Resultados por pregunta">
       <div class="container" *ngIf="grafica">
         <div class="row" *ngFor="let data of grafica.datasetsGrouped; let i = index">
-          <div class="col-12 col-lg-6">
-            <gcm-area
+          <div class="col-12 col-lg-9">
+            <gcm-stacked-bar
               [data]="data"
               [description]="data.aspecto"
               *ngIf="graficaRegenerada"
-            ></gcm-area>
+            ></gcm-stacked-bar>
           </div>
-          <div class="col-12 col-lg-6">
+          <div class="col-12 col-lg-3">
             <br />
             <br />
             <div *ngFor="let des of fetchByOrden(data.labels)">
               <span><b>{{des.key}} :</b> {{des.description }}</span><br /><br />
             </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Resultados generales">
+      <div class="container" *ngIf="grafica && calificacionesCondiciones">
+        <div class="row">
+          <div class="col-12">
+            <gcm-stacked-bar
+              [data]="calificacionesCondiciones"
+              description="CALIFICACIÓN POR CONDICIÓN"
+              *ngIf="graficaRegenerada"
+            ></gcm-stacked-bar>
           </div>
         </div>
       </div>

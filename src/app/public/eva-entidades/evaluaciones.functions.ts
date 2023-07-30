@@ -1,5 +1,5 @@
-import { GcmGrouped, groupByKey } from '@eklipse/utilities';
-import { IEvaCalT1, IResultado } from './evaluaciones.interfaces';
+import { GcmGrouped, cloneDeep, groupByKey, uniq } from '@eklipse/utilities';
+import { ICalCondicion, IEvaCalT1, IResultado } from './evaluaciones.interfaces';
 
 export const generarGraficas = (data: IEvaCalT1[]) => {
   const resultados: { entidad: string; resultados: GcmGrouped<IResultado>[] }[] = [];
@@ -58,4 +58,45 @@ export const generarGraficas = (data: IEvaCalT1[]) => {
   });
 
   return { datasetsGrouped, aspectosEvaluados };
+};
+export const generarGraficasCondiciones = (data: IEvaCalT1[]) => {
+  const labels = uniq(cloneDeep(data[0]).resultados.map(_ => _.condicion));
+  labels.push('TOTAL');
+  const datasets: any[] = [];
+
+  data.forEach(res => {
+    const arrNum: number[] = [];
+
+    labels.forEach(label => {
+      if (label !== 'TOTAL') {
+        const dt = res.resultadosCondiciones.filter(rc => rc.nombre === label)[0];
+        arrNum.push(dt.calificacion);
+      }
+    });
+
+    arrNum.push(res.calificacionFinal);
+
+    datasets.push({ label: res.nombreEvaluado, data: arrNum });
+  });
+
+  const result = {
+    labels,
+    datasets,
+  };
+
+  return result;
+};
+
+export const calcularCalificacionCondicion = (rows: IResultado[]) => {
+  let exp = 0,
+    total = 0;
+
+  rows.forEach(_ => {
+    if (_.calificacion) {
+      exp++;
+      total += _.calificacion;
+    }
+  });
+
+  return +(total / exp).toFixed(2);
 };

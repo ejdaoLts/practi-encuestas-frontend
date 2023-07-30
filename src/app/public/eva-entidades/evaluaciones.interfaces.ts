@@ -5,6 +5,8 @@ export interface IEvaCalT1 {
   nombreEvaluador: string;
   nombreEvaluado: string;
   resultados: IResultado[];
+  resultadosCondiciones: { nombre: string; calificacion: number }[];
+  calificacionFinal: number;
   tipo_evaluacion: {
     id: number;
     tipo: number;
@@ -23,6 +25,11 @@ export interface IEvaCalT1 {
     is_active: number;
   };
   entidad: IEntidad;
+}
+
+export interface ICalCondicion {
+  nombre: string;
+  calificacion: number;
 }
 
 export interface IEntidad {
