@@ -43,7 +43,6 @@ export class EvaluacionesService extends BaseHttp {
               res2.resultadosCondiciones = calificaciones;
 
               calificaciones.forEach(cal => {
-                console.log(cal);
                 res2.calificacionFinal += cal.calificacion;
               });
 

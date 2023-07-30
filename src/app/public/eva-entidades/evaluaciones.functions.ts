@@ -87,6 +87,24 @@ export const generarGraficasCondiciones = (data: IEvaCalT1[]) => {
   return result;
 };
 
+export const generarGraficasGeneral = (data: IEvaCalT1[]) => {
+  const labels = ['CALIFICACIÓN TOTAL'];
+  const datasets: any[] = [];
+
+  data.forEach(res => {
+    datasets.push({ label: res.nombreEvaluado, data: [res.calificacionFinal] });
+  });
+
+  const result = {
+    labels,
+    datasets,
+  };
+
+  console.log(result);
+
+  return result;
+};
+
 export const calcularCalificacionCondicion = (rows: IResultado[]) => {
   let exp = 0,
     total = 0;

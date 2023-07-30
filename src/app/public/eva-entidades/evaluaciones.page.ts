@@ -18,7 +18,11 @@ import { groupByKey, saveAsExcel } from '@eklipse/utilities';
 import { cloneDeep, orderBy } from 'lodash';
 import { MatButtonModule } from '@angular/material/button';
 import { GcmAreaModule, GcmStackedBarModule } from '@common/charts';
-import { generarGraficas, generarGraficasCondiciones } from './evaluaciones.functions';
+import {
+  generarGraficas,
+  generarGraficasCondiciones,
+  generarGraficasGeneral,
+} from './evaluaciones.functions';
 import { IEvaCalT1 } from './evaluaciones.interfaces';
 
 @Component({
@@ -56,6 +60,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
 
   public tiposEvaluaciones: any[] = [];
   public calificacionesCondiciones: any;
+  public calificacionesGenerales: any;
 
   public grafica: any;
   public graficaRegenerada = false;
@@ -77,6 +82,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       this._instanceDataSource(_.data);
       this._generateEstadisticas(_.data);
       this.calificacionesCondiciones = generarGraficasCondiciones(_.data);
+      this.calificacionesGenerales = generarGraficasGeneral(_.data);
       if (_.lastUpdate) this.grafica = generarGraficas(_.data);
     });
 
