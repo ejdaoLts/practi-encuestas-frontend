@@ -1,0 +1,15 @@
+.bdr1-fac-per {
+  width: 610px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: 1px solid var(--dark-color-100);
+}
+.bdr2-fac-per {
+  display: flex;
+  width: 610px;
+  justify-content: space-between;
+  font-weight: 600;
+  border-right: 1px solid var(--dark-color-100);
+  border-left: 1px solid var(--dark-color-100);
+}

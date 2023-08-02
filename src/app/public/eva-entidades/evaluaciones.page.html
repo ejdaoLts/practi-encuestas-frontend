@@ -68,6 +68,7 @@
       </div>
     </mat-tab>
     <mat-tab label="Resultados por pregunta">
+      <br />
       <div class="container" *ngIf="grafica">
         <div class="row" *ngFor="let data of grafica.datasetsGrouped; let i = index">
           <div class="col-12 col-lg-9">
@@ -76,6 +77,34 @@
               [description]="data.aspecto"
               *ngIf="graficaRegenerada"
             ></gcm-stacked-bar>
+
+            <div class="bdr2-fac-per">
+              <div
+                [style.width.px]="el === 'CENTRO' ? 220 : 130"
+                *ngFor="let el of data.labelsForMiniTable"
+              >
+                {{el}}
+              </div>
+            </div>
+            <div *ngFor="let el of data.dataForMiniTable; let ix = index">
+              <div class="bdr1-fac-per">
+                <div style="display: flex; width: 610px; justify-content: space-between">
+                  <div style="width: 220px">
+                    <b>{{ el['CENTRO'] }}:</b>
+                  </div>
+
+                  <div
+                    [style.width.px]="el === 'CENTRO' ? 220 : 130"
+                    [hidden]="nm === 'CENTRO'"
+                    *ngFor="let nm of data.labelsForMiniTable"
+                  >
+                    <div *ngIf="nm !== 'CENTRO'">{{ el[nm] | formatMoney: false }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <br />
           </div>
           <div class="col-12 col-lg-3">
             <br />
@@ -89,17 +118,58 @@
     </mat-tab>
 
     <mat-tab label="Resultados generales">
+      <br />
       <div class="container" *ngIf="grafica && calificacionesCondiciones">
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 col-md-8">
             <gcm-stacked-bar
               [data]="calificacionesCondiciones"
               description="CALIFICACIÓN POR CONDICIÓN"
               *ngIf="graficaRegenerada"
             ></gcm-stacked-bar>
+
+            <div class="bdr2-fac-per">
+              <div style="width: 220px">CENTRO</div>
+              <div style="width: 130px">C1</div>
+              <div style="width: 130px">C2</div>
+              <div style="width: 130px">C3</div>
+              <div style="width: 130px">C4</div>
+              <div style="width: 130px">C5</div>
+              <div style="width: 130px">C6</div>
+              <div style="width: 130px">C7</div>
+              <div style="width: 130px">TOTAL</div>
+            </div>
+            <div *ngFor="let el of calificacionesCondiciones.dataForMiniTable; let ix = index">
+              <div class="bdr1-fac-per">
+                <div style="display: flex; width: 610px; justify-content: space-between">
+                  <div style="width: 220px">
+                    <b>{{ el['nombre'] }}:</b>
+                  </div>
+
+                  <div style="width: 130px">{{ el['C1'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['C2'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['C3'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['C4'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['C5'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['C6'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['C7'] | formatMoney: false }}</div>
+                  <div style="width: 130px">{{ el['TOTAL'] | formatMoney: false }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <br />
+            <div *ngFor="let i of calificacionesCondiciones.labelsNames">
+              <span><b>{{i.value}}</b> - {{i.name}}</span><br /><br />
+            </div>
           </div>
         </div>
       </div>
+
+      <br />
+
       <div class="container" *ngIf="grafica && calificacionesGenerales">
         <div class="row">
           <div class="col-12">
@@ -108,6 +178,23 @@
               description="CALIFICACIÓN POR ENTIDAD"
               *ngIf="graficaRegenerada"
             ></gcm-stacked-bar>
+
+            <br />
+            <div class="bdr2-fac-per">
+              <div style="width: 220px">CENTRO</div>
+              <div style="width: 130px">CALIFICACIÓN</div>
+            </div>
+            <div *ngFor="let el of calificacionesGenerales.dataForMiniTable; let ix = index">
+              <div class="bdr1-fac-per">
+                <div style="display: flex; width: 610px; justify-content: space-between">
+                  <div style="width: 220px">
+                    <b>{{ el['nombre'] }}:</b>
+                  </div>
+
+                  <div style="width: 130px">{{ el['calificacion'] | formatMoney: false }}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

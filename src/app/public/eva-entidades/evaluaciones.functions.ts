@@ -1,5 +1,5 @@
 import { GcmGrouped, cloneDeep, groupByKey, uniq } from '@eklipse/utilities';
-import { ICalCondicion, IEvaCalT1, IResultado } from './evaluaciones.interfaces';
+import { IEvaCalT1, IResultado } from './evaluaciones.interfaces';
 
 export const generarGraficas = (data: IEvaCalT1[]) => {
   const resultados: { entidad: string; resultados: GcmGrouped<IResultado>[] }[] = [];
@@ -50,18 +50,55 @@ export const generarGraficas = (data: IEvaCalT1[]) => {
       });
     });
 
+    const dataForMiniTable: any[] = [];
+    const labelsForMiniTable: any[] = ['CENTRO'];
+
+    datasets.forEach(dataset => {
+      const newEnt: any = {
+        CENTRO: dataset.label,
+      };
+
+      dataset.data.forEach((el: number, i: number) => {
+        if (i + 1 < dataset.data.length) {
+          labelsForMiniTable.push(`P${labels[i]}`);
+          newEnt[`P${labels[i]}`] = el;
+        } else {
+          labelsForMiniTable.push(`TOTAL`);
+          newEnt[`TOTAL`] = el;
+        }
+      });
+
+      dataForMiniTable.push(newEnt);
+    });
+
     datasetsGrouped.push({
       labels,
       datasets,
+      dataForMiniTable,
+      labelsForMiniTable: uniq(labelsForMiniTable),
       aspecto,
     });
   });
 
+  console.log({ datasetsGrouped, aspectosEvaluados });
   return { datasetsGrouped, aspectosEvaluados };
 };
 export const generarGraficasCondiciones = (data: IEvaCalT1[]) => {
+  const labelsNames: any[] = [];
   const labels = uniq(cloneDeep(data[0]).resultados.map(_ => _.condicion));
+
+  const labelsEnumered: string[] = [];
+
+  labels.forEach((_, i) => {
+    labelsEnumered.push(`C${i + 1}`);
+  });
+
+  labels.forEach((label, i) => {
+    labelsNames.push({ value: `C${i + 1}`, name: label });
+  });
+
   labels.push('TOTAL');
+  labelsEnumered.push('TOTAL');
   const datasets: any[] = [];
 
   data.forEach(res => {
@@ -79,8 +116,25 @@ export const generarGraficasCondiciones = (data: IEvaCalT1[]) => {
     datasets.push({ label: res.nombreEvaluado, data: arrNum });
   });
 
+  const dataForMiniTable: any[] = [];
+
+  datasets.forEach(dataset => {
+    const newEnt: any = {
+      nombre: dataset.label,
+    };
+
+    dataset.data.forEach((el: number, i: number) => {
+      if (i + 1 < dataset.data.length) newEnt[`C${i + 1}`] = el;
+      else newEnt[`TOTAL`] = el;
+    });
+
+    dataForMiniTable.push(newEnt);
+  });
+
   const result = {
-    labels,
+    labels: labelsEnumered,
+    dataForMiniTable,
+    labelsNames,
     datasets,
   };
 
@@ -95,12 +149,26 @@ export const generarGraficasGeneral = (data: IEvaCalT1[]) => {
     datasets.push({ label: res.nombreEvaluado, data: [res.calificacionFinal] });
   });
 
+  const dataForMiniTable: any[] = [];
+
+  datasets.forEach(dataset => {
+    const newEnt: any = {
+      nombre: dataset.label,
+      calificacion: 0,
+    };
+
+    dataset.data.forEach((el: number, i: number) => {
+      newEnt.calificacion = el;
+    });
+
+    dataForMiniTable.push(newEnt);
+  });
+
   const result = {
     labels,
     datasets,
+    dataForMiniTable,
   };
-
-  console.log(result);
 
   return result;
 };
