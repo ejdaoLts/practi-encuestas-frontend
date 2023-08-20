@@ -80,7 +80,6 @@ export const generarGraficas = (data: IEvaCalT1[]) => {
     });
   });
 
-  console.log({ datasetsGrouped, aspectosEvaluados });
   return { datasetsGrouped, aspectosEvaluados };
 };
 export const generarGraficasCondiciones = (data: IEvaCalT1[]) => {
@@ -147,6 +146,58 @@ export const generarGraficasGeneral = (data: IEvaCalT1[]) => {
 
   data.forEach(res => {
     datasets.push({ label: res.nombreEvaluado, data: [res.calificacionFinal] });
+  });
+
+  const dataForMiniTable: any[] = [];
+
+  datasets.forEach(dataset => {
+    const newEnt: any = {
+      nombre: dataset.label,
+      calificacion: 0,
+    };
+
+    dataset.data.forEach((el: number, i: number) => {
+      newEnt.calificacion = el;
+    });
+
+    dataForMiniTable.push(newEnt);
+  });
+
+  const result = {
+    labels,
+    datasets,
+    dataForMiniTable,
+  };
+
+  return result;
+};
+
+export const generarGraficasGeneralPorCondicion = (data: IEvaCalT1[]) => {
+  const tempData = [
+    { nombre: 'ASPECTOS GENERALES', calificacion: 0 },
+    { nombre: 'CAPACIDAD INSTALADA', calificacion: 0 },
+    { nombre: 'SEGURIDAD, PROTECCIÓN Y BIENESTAR', calificacion: 0 },
+    { nombre: 'ORGANIZACIÓN ADMINISTRATIVA PARA LA DOCENCIA SERVICIO', calificacion: 0 },
+    { nombre: 'PERSONAL DOCENTE', calificacion: 0 },
+    { nombre: 'PRÁCTICAS FORMATIVAS', calificacion: 0 },
+    { nombre: 'CULTURA DEL MEJORAMIENTO CONTINUO', calificacion: 0 },
+  ];
+
+  data.forEach(el => {
+    el.resultadosCondiciones.forEach(rc => {
+      tempData.filter(td => td.nombre === rc.nombre)[0].calificacion += rc.calificacion;
+    });
+  });
+
+  tempData.map(el => {
+    el.calificacion = el.calificacion / data.length;
+  });
+
+  const labels = ['CALIFICACIÓN GENERAL POR CODICIÓN'];
+  const datasets: any[] = [];
+
+  tempData.forEach(res => {
+    datasets.push({ label: res.nombre, data: [res.calificacion] });
   });
 
   const dataForMiniTable: any[] = [];

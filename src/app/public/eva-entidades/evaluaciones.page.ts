@@ -22,6 +22,7 @@ import {
   generarGraficas,
   generarGraficasCondiciones,
   generarGraficasGeneral,
+  generarGraficasGeneralPorCondicion,
 } from './evaluaciones.functions';
 import { IEvaCalT1 } from './evaluaciones.interfaces';
 
@@ -61,6 +62,7 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
   public tiposEvaluaciones: any[] = [];
   public calificacionesCondiciones: any;
   public calificacionesGenerales: any;
+  public calificacionesGeneralesPorCondicion: any;
 
   public grafica: any;
   public graficaRegenerada = false;
@@ -83,6 +85,8 @@ export class EvaluacionesPage implements OnInit, OnDestroy {
       this._generateEstadisticas(_.data);
       this.calificacionesCondiciones = generarGraficasCondiciones(_.data);
       this.calificacionesGenerales = generarGraficasGeneral(_.data);
+      this.calificacionesGeneralesPorCondicion = generarGraficasGeneralPorCondicion(_.data);
+
       if (_.lastUpdate) this.grafica = generarGraficas(_.data);
     });
 

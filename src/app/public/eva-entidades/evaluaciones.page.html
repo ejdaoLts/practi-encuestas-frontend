@@ -198,6 +198,38 @@
           </div>
         </div>
       </div>
+      <br />
+      <br />
+      <div class="container" *ngIf="grafica && calificacionesGeneralesPorCondicion">
+        <div class="row">
+          <div class="col-12">
+            <gcm-stacked-bar
+              [data]="calificacionesGeneralesPorCondicion"
+              description="CALIFICACIÓN POR CONDICIÓN"
+              *ngIf="graficaRegenerada"
+            ></gcm-stacked-bar>
+
+            <br />
+            <div class="bdr2-fac-per">
+              <div style="width: 280px">CONDICIÓN</div>
+              <div style="width: 130px">CALIFICACIÓN</div>
+            </div>
+            <div
+              *ngFor="let el of calificacionesGeneralesPorCondicion.dataForMiniTable; let ix = index"
+            >
+              <div class="bdr1-fac-per">
+                <div style="display: flex; width: 660px; justify-content: space-between">
+                  <div style="width: 280px">
+                    <b>{{ el['nombre'] }}:</b>
+                  </div>
+
+                  <div style="width: 130px">{{ el['calificacion'] | formatMoney: false }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </ion-content>
